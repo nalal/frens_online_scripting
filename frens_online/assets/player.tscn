@@ -1,0 +1,212 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://scripting/player.gd" type="Script" id=1]
+[ext_resource path="res://assets/models/hors.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripting/cam_zoom.gd" type="Script" id=3]
+[ext_resource path="res://scripting/cam_col.gd" type="Script" id=4]
+[ext_resource path="res://scripting/player_cam.gd" type="Script" id=5]
+[ext_resource path="res://assets/name_box.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scripting/hud.gd" type="Script" id=7]
+[ext_resource path="res://assets/pause_menu.tscn" type="PackedScene" id=8]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 2.0
+
+[sub_resource type="QuadMesh" id=2]
+
+[sub_resource type="ViewportTexture" id=3]
+viewport_path = NodePath("name_box")
+
+[sub_resource type="SpatialMaterial" id=4]
+resource_local_to_scene = true
+flags_transparent = true
+flags_unshaded = true
+flags_albedo_tex_force_srgb = true
+params_billboard_mode = 1
+params_billboard_keep_scale = true
+albedo_texture = SubResource( 3 )
+
+[sub_resource type="BoxShape" id=5]
+
+[sub_resource type="BoxShape" id=6]
+
+[sub_resource type="Environment" id=7]
+background_mode = 1
+background_color = Color( 0.65098, 0.658824, 0.666667, 1 )
+fog_enabled = true
+fog_color = Color( 0.65098, 0.658824, 0.666667, 1 )
+fog_sun_color = Color( 1, 0.901961, 0.701961, 0 )
+fog_transmit_enabled = true
+fog_height_enabled = true
+fog_height_max = 100.0
+
+[sub_resource type="BoxShape" id=8]
+
+[sub_resource type="BoxShape" id=9]
+
+[node name="player" type="KinematicBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0132637, 2.15776, 0 )
+script = ExtResource( 1 )
+
+[node name="player_collide" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0, 0.311413 )
+shape = SubResource( 1 )
+
+[node name="name_box" type="MeshInstance" parent="player_collide"]
+transform = Transform( 3, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.80656, 0 )
+mesh = SubResource( 2 )
+material/0 = SubResource( 4 )
+
+[node name="player_model" parent="player_collide" instance=ExtResource( 2 )]
+transform = Transform( 0.57, 0, 0, 0, 0.255, 0, 0, 0, 0.53, 0, -1.21543, -0.311413 )
+
+[node name="cam_rotate" type="Spatial" parent="player_collide"]
+transform = Transform( 1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0.0473833, 0.0814176, -0.311413 )
+
+[node name="head" type="Spatial" parent="player_collide/cam_rotate"]
+transform = Transform( 1, 0, 0, 0, 0.999852, 0.0171936, 0, -0.0171936, 0.999852, -0.0473833, 3.57456, -0.371187 )
+
+[node name="cam_z_area_box" type="Area" parent="player_collide/cam_rotate/head"]
+transform = Transform( 1, -1.77636e-15, 0, -1.22168e-16, 1, 1.86265e-09, 7.10438e-15, -1.86265e-09, 1, 0, -0.0823669, -0.00141698 )
+collision_layer = 2
+collision_mask = 2
+
+[node name="cam_z_collision_box" type="CollisionShape" parent="player_collide/cam_rotate/head/cam_z_area_box"]
+transform = Transform( 0.3, -9.70645e-24, -4.96308e-24, 0, 0.3, 4.19095e-09, 0, -4.19095e-09, 0.3, 0, 0.00100517, -0.0582024 )
+shape = SubResource( 5 )
+
+[node name="cam_zoom" type="KinematicBody" parent="player_collide/cam_rotate/head"]
+script = ExtResource( 3 )
+
+[node name="reset_pos" type="Area" parent="player_collide/cam_rotate/head/cam_zoom"]
+transform = Transform( 1, 0, 0, -1.1876e-16, 0.99986, 0.0167139, -7.10444e-15, -0.0167139, 0.99986, 0.0482149, 1.01042, -8.3953 )
+
+[node name="reset_collide" type="CollisionShape" parent="player_collide/cam_rotate/head/cam_zoom/reset_pos"]
+shape = SubResource( 6 )
+
+[node name="cam_move" type="KinematicBody" parent="player_collide/cam_rotate/head/cam_zoom"]
+transform = Transform( 1, 0, 0, -1.1876e-16, 0.99986, 0.0167139, -7.10444e-15, -0.0167139, 0.99986, 0.0482149, 0.581066, -6.05018 )
+script = ExtResource( 4 )
+
+[node name="cam_phys" type="Spatial" parent="player_collide/cam_rotate/head/cam_zoom/cam_move"]
+transform = Transform( -1, -3.55271e-15, -8.74228e-08, -2.39738e-08, 0.961665, 0.274228, 8.40715e-08, 0.274228, -0.961665, -0.0482082, 0.92931, -0.125401 )
+
+[node name="tp_cam" type="Camera" parent="player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys"]
+transform = Transform( 1, 1.77636e-15, 1.42109e-14, -3.55271e-15, 1, -2.98023e-08, 7.10543e-15, 2.98023e-08, 1, 0, -0.277405, -0.0690269 )
+environment = SubResource( 7 )
+script = ExtResource( 5 )
+
+[node name="r_cam" type="RayCast" parent="player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/tp_cam"]
+collision_mask = 4
+collide_with_areas = true
+
+[node name="cam_collision_area" type="Area" parent="player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys"]
+
+[node name="cam_collision_box" type="CollisionShape" parent="player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/cam_collision_area"]
+transform = Transform( 1, 1.77636e-15, 0, -1.77636e-15, 1, 0, 0, 0, 1, 0, 0, 0 )
+shape = SubResource( 8 )
+
+[node name="cam_collision_buffer" type="Area" parent="player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys"]
+transform = Transform( 1, 5.32907e-15, -2.13163e-14, -7.10543e-15, 1, 0, 0, 0, 1, 4.19095e-08, 0.119763, -0.481301 )
+
+[node name="cam_collision_buffer_box" type="CollisionShape" parent="player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/cam_collision_buffer"]
+transform = Transform( 1.939, 7.10543e-15, 0, -3.55271e-15, 1.79, 0, 0, 0, 1.693, -9.40636e-08, -0.27183, 1.09244 )
+shape = SubResource( 8 )
+
+[node name="cam_ray_f" type="RayCast" parent="player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys"]
+transform = Transform( 1, -4.64422e-07, 1.24243e-07, 2.98808e-08, -0.197892, -0.980225, 4.79823e-07, 0.980225, -0.197892, 0.0036993, -0.994873, -1.41064 )
+enabled = true
+cast_to = Vector3( 0, -4.28, 0 )
+collide_with_areas = true
+
+[node name="cam_ray_f_local" type="RayCast" parent="player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys"]
+transform = Transform( 1, -8.56939e-08, 1.04723e-07, 8.5694e-08, -0.197892, -0.980225, 1.04723e-07, 0.980225, -0.197892, 0.00369644, -0.994873, -1.41064 )
+enabled = true
+cast_to = Vector3( 0, -12.47, 0 )
+collision_mask = 2
+collide_with_areas = true
+
+[node name="fp_cam" type="Camera" parent="player_collide/cam_rotate/head/cam_zoom/cam_move"]
+transform = Transform( -1, 0, -8.74228e-08, -1.46118e-09, 0.999861, 0.0167139, 8.74106e-08, 0.0167139, -0.999861, -0.0482149, -0.682106, 6.03963 )
+visible = false
+
+[node name="cam_reset" type="Spatial" parent="player_collide/cam_rotate"]
+
+[node name="p_jump_area" type="Area" parent="player_collide"]
+transform = Transform( 1, 0, 0, 0, 0.129, 0, 0, 0, 1.991, 0, -1.14997, 0 )
+
+[node name="p_jump_collide" type="CollisionShape" parent="player_collide/p_jump_area"]
+shape = SubResource( 9 )
+
+[node name="throw_point" type="Spatial" parent="player_collide"]
+transform = Transform( 1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0.295363, 2.69754 )
+
+[node name="name_box" parent="." instance=ExtResource( 6 )]
+
+[node name="pause_menu" parent="." instance=ExtResource( 8 )]
+
+[node name="hud" type="Control" parent="."]
+margin_right = 1920.0
+margin_bottom = 1080.0
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="h_p_info_background" type="ColorRect" parent="hud"]
+margin_right = 125.0
+margin_bottom = 54.0
+color = Color( 0.180392, 0.168627, 0.168627, 1 )
+
+[node name="h_p_name_label" type="Label" parent="hud"]
+margin_right = 40.0
+margin_bottom = 14.0
+
+[node name="h_version_info" type="Label" parent="hud"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -1251.0
+margin_bottom = 14.0
+align = 2
+
+[node name="h_fps" type="Label" parent="hud"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -1251.0
+margin_top = 20.0
+margin_bottom = 34.0
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="pa_chat" type="Panel" parent="hud"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1920.0
+margin_top = 771.0
+margin_right = -1329.0
+margin_bottom = -1.0
+
+[node name="rtl_chat" type="RichTextLabel" parent="hud/pa_chat"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -591.0
+margin_top = 1.0
+margin_right = 1.0
+margin_bottom = -26.0
+scroll_following = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_chat" type="LineEdit" parent="hud/pa_chat"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -590.0
+margin_top = 283.0
+margin_bottom = -1.0
+placeholder_text = "Press enter to type"

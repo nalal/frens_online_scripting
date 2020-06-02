@@ -1,0 +1,84 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripting/wd_customize.gd" type="Script" id=1]
+
+[node name="wd_customize" type="WindowDialog"]
+visible = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -391.0
+margin_top = -165.0
+margin_right = 268.0
+margin_bottom = 166.0
+window_title = "Model Customization"
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vc_model_view" type="ViewportContainer" parent="."]
+margin_right = 381.0
+margin_bottom = 329.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="v_model_render" type="Viewport" parent="vc_model_view"]
+size = Vector2( 257, 329 )
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="s_model_render_plane" type="Spatial" parent="vc_model_view/v_model_render"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0160394, 0 )
+
+[node name="Camera" type="Camera" parent="vc_model_view/v_model_render/s_model_render_plane"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7964, 9.87262 )
+far = 50.0
+
+[node name="b_open_model_list" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -277.0
+margin_bottom = 20.0
+text = "Select Model"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="l_placeholder" type="Label" parent="."]
+margin_left = 383.0
+margin_top = 22.0
+margin_right = 504.0
+margin_bottom = 36.0
+text = "No Model Selected"
+
+[node name="il_parts" type="ItemList" parent="."]
+margin_left = 383.0
+margin_top = 20.0
+margin_right = 658.0
+margin_bottom = 330.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="rtl_model_list" type="ItemList" parent="."]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -280.0
+margin_bottom = 331.0
+
+[node name="vsb_zoom" type="VScrollBar" parent="."]
+margin_right = 12.0
+margin_bottom = 330.0
+value = 100.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="hide" from="." to="." method="_on_wd_customize_hide"]
+[connection signal="popup_hide" from="." to="." method="_on_wd_customize_popup_hide"]
+[connection signal="pressed" from="b_open_model_list" to="." method="_on_b_open_model_list_pressed"]
+[connection signal="item_selected" from="il_parts" to="." method="_on_il_parts_item_selected"]
+[connection signal="item_selected" from="rtl_model_list" to="." method="_on_rtl_model_list_item_selected"]

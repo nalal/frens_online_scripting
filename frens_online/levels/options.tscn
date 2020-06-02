@@ -1,0 +1,98 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripting/options.gd" type="Script" id=1]
+[ext_resource path="res://assets/binding_list.tscn" type="PackedScene" id=2]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="cr_bg" type="ColorRect" parent="."]
+margin_top = 1.05264
+margin_right = 1920.0
+margin_bottom = 1081.05
+color = Color( 0, 0, 0, 1 )
+
+[node name="l_menu_name" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -25.5
+margin_right = 25.5
+margin_bottom = 14.0
+text = "Options"
+align = 1
+
+[node name="l_render" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -85.5
+margin_top = 23.0
+margin_right = 17.5
+margin_bottom = 37.0
+text = "Render distance"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_bindings" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -33.5
+margin_top = -10.0
+margin_right = 33.5
+margin_bottom = 10.0
+text = "Bindings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_save" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -33.5
+margin_top = 51.0
+margin_right = 33.5
+margin_bottom = 71.0
+text = "Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="pu_binding_list" parent="." instance=ExtResource( 2 )]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -156.5
+margin_top = -188.0
+margin_right = 156.5
+margin_bottom = 188.0
+
+[node name="b_back" type="Button" parent="."]
+margin_right = 12.0
+margin_bottom = 20.0
+text = "Main Menu"
+
+[node name="le_render_dist" type="LineEdit" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 22.0
+margin_top = 17.0
+margin_right = 80.0
+margin_bottom = 41.0
+[connection signal="pressed" from="b_bindings" to="." method="_on_b_bindings_pressed"]
+[connection signal="pressed" from="b_save" to="." method="_on_b_save_pressed"]
+[connection signal="pressed" from="b_back" to="." method="_on_b_back_pressed"]

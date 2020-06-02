@@ -1,0 +1,392 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scripting/fol_orange.gd" type="Script" id=2]
+
+[sub_resource type="CubeMesh" id=1]
+
+[sub_resource type="BoxShape" id=2]
+
+[node name="Level" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="Spawn" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 3, 5 )
+
+[node name="level_geometry" type="Spatial" parent="."]
+
+[node name="StaticBody" type="StaticBody" parent="level_geometry"]
+transform = Transform( 15, 0, 0, 0, 0.5, 0, 0, 0, 15, -5, 0, 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody"]
+shape = SubResource( 2 )
+
+[node name="StaticBody4" type="StaticBody" parent="level_geometry"]
+transform = Transform( 15, 0, 0, 0, 0.5, 0, 0, 0, 15, -5, -17, 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody4"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody4"]
+shape = SubResource( 2 )
+
+[node name="StaticBody29" type="StaticBody" parent="level_geometry"]
+transform = Transform( 15, 0, 0, 0, -8.74228e-08, -2, 0, 2, -8.74228e-08, -5, -15, 18 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody29"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody29"]
+shape = SubResource( 2 )
+
+[node name="StaticBody2" type="StaticBody" parent="level_geometry"]
+transform = Transform( -2.18557e-07, -0.5, 0, 5, -2.18557e-08, 0, 0, 0, 15, -20, -3, 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody2"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody2"]
+shape = SubResource( 2 )
+
+[node name="StaticBody3" type="StaticBody" parent="level_geometry"]
+transform = Transform( -2.18557e-07, -0.5, 0, 5, -2.18557e-08, 0, 0, 0, 15, 10, -3, 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody3"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody3"]
+shape = SubResource( 2 )
+
+[node name="StaticBody5" type="StaticBody" parent="level_geometry"]
+transform = Transform( 1.91069e-14, 2.18557e-08, -5, 10, -2.18557e-08, -4.23516e-22, -4.37114e-07, -0.5, -2.18557e-07, -15, -8, -10 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody5"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody5"]
+shape = SubResource( 2 )
+
+[node name="StaticBody14" type="StaticBody" parent="level_geometry"]
+transform = Transform( 1.71962e-14, 2.18557e-08, -5, 9, -2.18557e-08, -1.27055e-21, -3.93403e-07, -0.5, -2.18557e-07, -5, -9, -10 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody14"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody14"]
+shape = SubResource( 2 )
+
+[node name="StaticBody6" type="StaticBody" parent="level_geometry"]
+transform = Transform( 1.91068e-14, 2.18557e-08, -5, 10, -2.18557e-08, -3.81165e-21, -4.37114e-07, -0.5, -2.18557e-07, 5, -8, -10 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody6"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody6"]
+shape = SubResource( 2 )
+
+[node name="StaticBody8" type="StaticBody" parent="level_geometry"]
+transform = Transform( 2.13163e-14, 2.6077e-08, 5, 10, -2.18557e-08, -4.23516e-22, 4.37114e-07, 0.5, -2.98023e-07, 5, -8, 20 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody8"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody8"]
+shape = SubResource( 2 )
+
+[node name="StaticBody15" type="StaticBody" parent="level_geometry"]
+transform = Transform( 1.58633e-14, 2.18557e-08, 5, 9, -2.18557e-08, 7.40491e-16, 3.93403e-07, 0.5, -2.18557e-07, -5, -9, 20 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody15"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody15"]
+shape = SubResource( 2 )
+
+[node name="StaticBody19" type="StaticBody" parent="level_geometry"]
+transform = Transform( -2.18557e-07, -0.5, 5.02914e-07, 5, -2.18557e-08, 2.44315e-15, 2.1711e-14, 5.58794e-08, 4.5, 10, -13, 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody19"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody19"]
+shape = SubResource( 2 )
+
+[node name="StaticBody20" type="StaticBody" parent="level_geometry"]
+transform = Transform( -2.18557e-07, -0.5, 5.02914e-07, 5, -2.18557e-08, 2.44315e-15, 2.1711e-14, 5.58794e-08, 4.5, -20, -13, 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody20"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody20"]
+shape = SubResource( 2 )
+
+[node name="StaticBody21" type="StaticBody" parent="level_geometry"]
+transform = Transform( -2.18557e-07, -0.5, 2.23517e-07, 5, -2.18557e-08, 1.08585e-15, 2.1711e-14, 5.58794e-08, 2, -20, -13, 18 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody21"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody21"]
+shape = SubResource( 2 )
+
+[node name="StaticBody22" type="StaticBody" parent="level_geometry"]
+transform = Transform( -2.18557e-07, -0.5, 2.23517e-07, 5, -2.18557e-08, 1.08585e-15, 2.1711e-14, 5.58794e-08, 2, -20, -13, -8 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody22"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody22"]
+shape = SubResource( 2 )
+
+[node name="StaticBody24" type="StaticBody" parent="level_geometry"]
+transform = Transform( -2.18557e-07, -0.5, 2.23517e-07, 5, -2.18557e-08, 1.08585e-15, 2.1711e-14, 5.58794e-08, 2, 10, -13, 18 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody24"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody24"]
+shape = SubResource( 2 )
+
+[node name="StaticBody23" type="StaticBody" parent="level_geometry"]
+transform = Transform( -2.18557e-07, -0.5, 2.23517e-07, 5, -2.18557e-08, 1.08585e-15, 2.1711e-14, 5.58794e-08, 2, 10, -13, -8 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody23"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody23"]
+shape = SubResource( 2 )
+
+[node name="StaticBody25" type="StaticBody" parent="level_geometry"]
+transform = Transform( -1.5299e-07, -0.5, 8.74228e-08, 0, -2.18557e-08, -2, 3.5, -2.18557e-08, 3.82137e-15, 10, -16, -3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody25"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody25"]
+shape = SubResource( 2 )
+
+[node name="StaticBody26" type="StaticBody" parent="level_geometry"]
+transform = Transform( -1.5299e-07, -0.5, 8.74228e-08, 0, -2.18557e-08, -2, 3.5, -2.18557e-08, 3.82137e-15, 10, -16, 13 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody26"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody26"]
+shape = SubResource( 2 )
+
+[node name="StaticBody28" type="StaticBody" parent="level_geometry"]
+transform = Transform( -1.5299e-07, -0.5, 8.74228e-08, 0, -2.18557e-08, -2, 3.5, -2.18557e-08, 3.82137e-15, -20, -16, -3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody28"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody28"]
+shape = SubResource( 2 )
+
+[node name="StaticBody27" type="StaticBody" parent="level_geometry"]
+transform = Transform( -1.5299e-07, -0.5, 8.74228e-08, 0, -2.18557e-08, -2, 3.5, -2.18557e-08, 3.82137e-15, -20, -16, 13 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody27"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody27"]
+shape = SubResource( 2 )
+
+[node name="StaticBody9" type="StaticBody" parent="level_geometry"]
+transform = Transform( -7.72033e-08, 0.25, 5.27929, 1.5273e-07, 0.433013, -3.048, -4, 1.17083e-08, -2.18275e-07, 5, -3, 24 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody9"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody9"]
+shape = SubResource( 2 )
+
+[node name="StaticBody10" type="StaticBody" parent="level_geometry"]
+transform = Transform( -1.74846e-07, 2.6077e-08, 5, 7.15256e-08, 0.5, -2.6077e-07, -4, 8.9407e-09, -2.18557e-07, -5, 0, -14 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody10"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody10"]
+shape = SubResource( 2 )
+
+[node name="StaticBody13" type="StaticBody" parent="level_geometry"]
+transform = Transform( -4, 8.94069e-09, -3.4729e-06, 7.15256e-08, 0.5, -1.19954e-06, 6.03983e-07, -2.6077e-08, -23, -24, -6, 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody13"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody13"]
+shape = SubResource( 2 )
+
+[node name="StaticBody16" type="StaticBody" parent="level_geometry"]
+transform = Transform( -4, 8.94069e-09, -3.4729e-06, 7.15256e-08, 0.5, -1.19954e-06, 6.03983e-07, -2.6077e-08, -23, 14, -6, 5 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody16"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody16"]
+shape = SubResource( 2 )
+
+[node name="StaticBody12" type="StaticBody" parent="level_geometry"]
+transform = Transform( -1.74846e-07, 2.6077e-08, 5, 7.15256e-08, 0.5, -2.6077e-07, -4, 8.9407e-09, -2.18557e-07, -5, 0, 24 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody12"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody12"]
+shape = SubResource( 2 )
+
+[node name="StaticBody11" type="StaticBody" parent="level_geometry"]
+transform = Transform( -1.60135e-07, -0.25, 5.27929, -2.54798e-08, 0.433013, 3.048, -4, 7.25015e-09, -2.30765e-07, -15, -3, -14 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody11"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody11"]
+shape = SubResource( 2 )
+
+[node name="StaticBody17" type="StaticBody" parent="level_geometry"]
+transform = Transform( -1.60135e-07, -0.25, 15.5885, -2.54798e-08, 0.433013, 9, -4, 7.25015e-09, -6.81393e-07, -5, -15, -14 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody17"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody17"]
+shape = SubResource( 2 )
+
+[node name="StaticBody18" type="StaticBody" parent="level_geometry"]
+transform = Transform( 5.09826e-07, 0.25, -15.5885, -2.54798e-08, 0.433013, 9, 4, -2.91058e-08, 2.04418e-06, -5, -15, 24 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody18"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody18"]
+shape = SubResource( 2 )
+
+[node name="StaticBody7" type="StaticBody" parent="level_geometry"]
+transform = Transform( 1.99943e-14, 2.18557e-08, 5, 10, -2.18557e-08, -4.43746e-16, 4.37114e-07, 0.5, -2.18557e-07, -15, -8, 20 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="MeshInstance" type="MeshInstance" parent="level_geometry/StaticBody7"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="level_geometry/StaticBody7"]
+shape = SubResource( 2 )

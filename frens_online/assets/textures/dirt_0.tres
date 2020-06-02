@@ -1,0 +1,12 @@
+[gd_resource type="SpatialMaterial" load_steps=5 format=2]
+
+[ext_resource path="dirt_0_normal.png" type="Texture" id=3]
+
+[resource]
+albedo_color = Color(0.648438, 0.496212, 0.279892, 1)
+metallic = 0
+roughness = 1
+normal_enabled = true
+normal_scale = 10
+normal_texture = ExtResource( 3 )
+

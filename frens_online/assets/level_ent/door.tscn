@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/level_ent/door.gd" type="Script" id=1]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 1, 1, 1 )
+
+[node name="ent_door" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="door_pos" type="Spatial" parent="."]
+
+[node name="placeholder_door_pos" type="MeshInstance" parent="door_pos"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="close_pos" type="Spatial" parent="."]
+
+[node name="placeholder_close_pos" type="MeshInstance" parent="close_pos"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="open_pos" type="Spatial" parent="."]
+
+[node name="placeholder_open_pos" type="MeshInstance" parent="open_pos"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="Timer" type="Timer" parent="."]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

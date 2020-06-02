@@ -1,0 +1,259 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://scripting/main_menu.gd" type="Script" id=1]
+[ext_resource path="res://assets/menu.png" type="Texture" id=2]
+[ext_resource path="res://assets/text_box.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scripting/wd_credits.gd" type="Script" id=4]
+[ext_resource path="res://assets/wd_customize.tscn" type="PackedScene" id=5]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="cr_menu_background" type="ColorRect" parent="."]
+margin_right = 1920.0
+margin_bottom = 1080.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="menu_image_0" type="TextureRect" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -40.0
+margin_right = 40.0
+
+[node name="menu" type="Sprite" parent="menu_image_0"]
+position = Vector2( 204.895, -134.452 )
+scale = Vector2( 0.673684, 0.570175 )
+texture = ExtResource( 2 )
+
+[node name="l_title" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -56.5
+margin_right = 56.5
+margin_bottom = 14.0
+text = "Horse Videogame"
+align = 1
+
+[node name="Control" type="Control" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -20.0
+margin_top = -20.0
+margin_right = 20.0
+margin_bottom = 20.0
+
+[node name="b_play" type="Button" parent="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -32.0
+margin_top = -20.0
+margin_right = 32.0
+text = "Connect"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_options" type="Button" parent="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -31.5
+margin_top = 8.06836
+margin_right = 31.5
+margin_bottom = 28.0684
+text = "Options"
+
+[node name="b_local" type="Button" parent="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -42.5
+margin_top = -47.0
+margin_right = 42.5
+margin_bottom = -27.0
+text = "Play Offline"
+
+[node name="name_enter_dialog" type="WindowDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -172.0
+margin_top = -49.0
+margin_right = 173.0
+margin_bottom = 94.0
+window_title = "Player Name"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_enter_name" type="Button" parent="name_enter_dialog"]
+margin_left = 142.5
+margin_top = 115.3
+margin_right = 198.5
+margin_bottom = 135.3
+text = "Accept"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_name_input" type="LineEdit" parent="name_enter_dialog"]
+margin_left = 10.0
+margin_top = 29.0
+margin_right = 336.0
+margin_bottom = 53.0
+placeholder_text = "Username"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_pass_input" type="LineEdit" parent="name_enter_dialog"]
+margin_left = 10.0
+margin_top = 70.0
+margin_right = 336.0
+margin_bottom = 94.0
+secret = true
+placeholder_text = "Password"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="l_name_info" type="Label" parent="name_enter_dialog"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -127.0
+margin_top = -64.0
+margin_right = 127.0
+margin_bottom = -50.0
+text = "Please enter a user name and password"
+align = 1
+
+[node name="ctb_name_error_message" parent="." instance=ExtResource( 3 )]
+visible = false
+
+[node name="connection_dialog" type="WindowDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -158.5
+margin_top = -58.0
+margin_right = 158.5
+margin_bottom = 58.0
+window_title = "Connect"
+resizable = true
+
+[node name="le_ip" type="LineEdit" parent="connection_dialog"]
+margin_top = 20.0
+margin_right = 317.0
+margin_bottom = 44.0
+placeholder_text = "127.0.0.1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_port" type="LineEdit" parent="connection_dialog"]
+margin_top = 60.0
+margin_right = 317.0
+margin_bottom = 84.0
+placeholder_text = "25565"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="IP" type="Label" parent="connection_dialog"]
+margin_top = 5.0
+margin_right = 318.0
+margin_bottom = 19.0
+text = "IP:"
+
+[node name="PORT" type="Label" parent="connection_dialog"]
+margin_top = 45.0
+margin_right = 318.0
+margin_bottom = 59.0
+text = "PORT:"
+
+[node name="b_enter_ip" type="Button" parent="connection_dialog"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -28.0
+margin_top = -20.0
+margin_right = 28.0
+text = "Accept"
+
+[node name="b_credits" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -65.0
+margin_top = -30.0
+margin_right = -8.0
+margin_bottom = -10.0
+text = "Credits"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="wd_credits" type="WindowDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -140.5
+margin_top = -117.0
+margin_right = 140.5
+margin_bottom = 117.0
+window_title = "Credits"
+script = ExtResource( 4 )
+
+[node name="rt_credits" type="RichTextLabel" parent="wd_credits"]
+margin_right = 280.0
+margin_bottom = 210.0
+text = "Nac/Anon/PictureNotAvailable:
+-Creator and Developer of \"Frens Online\"
+
+RodZill4:
+-Developer of \"Material Maker\""
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_close" type="Button" parent="wd_credits"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -23.5
+margin_top = 93.0
+margin_right = 23.5
+margin_bottom = 113.0
+text = "Close"
+
+[node name="wd_customize" parent="." instance=ExtResource( 5 )]
+visible = true
+[connection signal="pressed" from="Control/b_play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="Control/b_options" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Control/b_local" to="." method="_on_b_local_pressed"]
+[connection signal="pressed" from="name_enter_dialog/b_enter_name" to="." method="_on_b_enter_name_pressed"]
+[connection signal="pressed" from="connection_dialog/b_enter_ip" to="." method="_on_b_enter_ip_pressed"]
+[connection signal="pressed" from="b_credits" to="." method="_on_b_credits_pressed"]
+[connection signal="pressed" from="wd_credits/b_close" to="wd_credits" method="_on_b_close_pressed"]

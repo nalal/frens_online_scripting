@@ -1,0 +1,103 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scripting/fol_entry_level.gd" type="Script" id=1]
+[ext_resource path="res://assets/textures/grass.tres" type="Material" id=2]
+[ext_resource path="res://assets/textures/wood.tres" type="Material" id=3]
+[ext_resource path="res://assets/textures/concrete.tres" type="Material" id=4]
+[ext_resource path="res://assets/spawn_point.tscn" type="PackedScene" id=5]
+
+[sub_resource type="CubeMesh" id=1]
+
+[sub_resource type="BoxShape" id=2]
+
+[node name="Level" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="Spawn" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.83159, 0 )
+
+[node name="pb_spaw_grass" type="StaticBody" parent="."]
+transform = Transform( 13.642, 0, 0, 0, 0.258, 0, 0, 0, 12.223, 0, 0, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="pb_spaw_grass"]
+mesh = SubResource( 1 )
+material/0 = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="pb_spaw_grass"]
+shape = SubResource( 2 )
+
+[node name="pb_spaw_floor" type="StaticBody" parent="."]
+transform = Transform( 100, 0, 0, 0, 0.258, 0, 0, 0, 100, 0, -0.495903, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="pb_spaw_floor"]
+mesh = SubResource( 1 )
+material/0 = ExtResource( 4 )
+
+[node name="CollisionShape" type="CollisionShape" parent="pb_spaw_floor"]
+shape = SubResource( 2 )
+
+[node name="pb_spaw_wood0" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.288, 0, 0, 0, 12.223, 14.6212, 0, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="pb_spaw_wood0"]
+mesh = SubResource( 1 )
+material/0 = ExtResource( 3 )
+
+[node name="CollisionShape" type="CollisionShape" parent="pb_spaw_wood0"]
+shape = SubResource( 2 )
+
+[node name="pb_spaw_wood1" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.288, 0, 0, 0, 12.223, -14.6195, 0, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="pb_spaw_wood1"]
+mesh = SubResource( 1 )
+material/0 = ExtResource( 3 )
+
+[node name="CollisionShape" type="CollisionShape" parent="pb_spaw_wood1"]
+shape = SubResource( 2 )
+
+[node name="pb_spaw_wood2" type="StaticBody" parent="."]
+transform = Transform( -1.62921e-07, 0, 15.643, 0, 0.288, 0, -1, 0, -2.54857e-06, 0.0304217, 0, 13.2282 )
+
+[node name="MeshInstance" type="MeshInstance" parent="pb_spaw_wood2"]
+mesh = SubResource( 1 )
+material/0 = ExtResource( 3 )
+
+[node name="CollisionShape" type="CollisionShape" parent="pb_spaw_wood2"]
+shape = SubResource( 2 )
+
+[node name="pb_spaw_wood4" type="StaticBody" parent="."]
+transform = Transform( -1.62921e-07, 0, 15.643, 0, 0.288, 0, -1, 0, -2.54857e-06, 0.0304217, 0, -13.1093 )
+
+[node name="MeshInstance" type="MeshInstance" parent="pb_spaw_wood4"]
+mesh = SubResource( 1 )
+material/0 = ExtResource( 3 )
+
+[node name="CollisionShape" type="CollisionShape" parent="pb_spaw_wood4"]
+shape = SubResource( 2 )
+
+[node name="pb_spaw_wood3" type="StaticBody" parent="."]
+transform = Transform( -1.62921e-07, 0, 15.643, 0, 0.288, 0, -1, 0, -2.54857e-06, 0.0304217, 0, 13.2282 )
+
+[node name="MeshInstance" type="MeshInstance" parent="pb_spaw_wood3"]
+mesh = SubResource( 1 )
+material/0 = ExtResource( 3 )
+
+[node name="CollisionShape" type="CollisionShape" parent="pb_spaw_wood3"]
+shape = SubResource( 2 )
+
+[node name="OmniLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 30.4835, 0 )
+light_energy = 16.0
+light_specular = 0.73
+omni_range = 192.7
+
+[node name="spawn_phys_0" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.71664, -34.7704 )
+
+[node name="StaticBody" type="StaticBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 16.2745 )
+
+[node name="CollisionShape2" type="CollisionShape" parent="StaticBody"]
+transform = Transform( -1.62921e-07, 0, 15.643, 0.253977, 0.278557, 6.47279e-07, -0.96721, 0.0731455, -2.465e-06, 0.0304217, -0.246877, -1.14887 )
+shape = SubResource( 2 )

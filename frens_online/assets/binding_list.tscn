@@ -1,0 +1,108 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripting/binding_list.gd" type="Script" id=1]
+
+[node name="pu_binding_list" type="WindowDialog"]
+margin_left = 359.224
+margin_top = 62.0499
+margin_right = 672.224
+margin_bottom = 438.05
+window_title = "Bindings"
+script = ExtResource( 1 )
+
+[node name="il_bindings_list" type="ItemList" parent="."]
+margin_left = 1.0
+margin_right = 312.0
+margin_bottom = 352.0
+max_columns = 2
+same_column_width = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_bind" type="Button" parent="."]
+margin_left = 267.788
+margin_top = 354.096
+margin_right = 308.788
+margin_bottom = 374.096
+text = "Bind"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_reset" type="Button" parent="."]
+margin_left = 2.78784
+margin_top = 354.096
+margin_right = 43.7878
+margin_bottom = 374.096
+text = "Reset"
+
+[node name="b_save" type="Button" parent="."]
+margin_left = 52.7878
+margin_top = 354.096
+margin_right = 100.788
+margin_bottom = 374.096
+text = "Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_clear" type="Button" parent="."]
+margin_left = 221.788
+margin_top = 354.096
+margin_right = 265.788
+margin_bottom = 374.096
+text = "Clear"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="request_binding" type="WindowDialog" parent="."]
+visible = true
+margin_left = -1.0
+margin_top = 150.0
+margin_right = 313.0
+margin_bottom = 235.0
+window_title = "Bind Key"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="l_bind" type="Label" parent="request_binding"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -70.0
+margin_top = -7.0
+margin_right = 70.0
+margin_bottom = 7.0
+text = "Press any key to bind"
+align = 1
+
+[node name="b_accept" type="Button" parent="request_binding"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -20.0
+margin_right = 56.0
+disabled = true
+text = "Accept"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_cancel" type="Button" parent="request_binding"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -54.0
+margin_top = -20.0
+text = "Cancel"
+[connection signal="pressed" from="b_bind" to="." method="_on_b_bind_pressed"]
+[connection signal="pressed" from="b_reset" to="." method="_on_b_reset_pressed"]
+[connection signal="pressed" from="b_save" to="." method="_on_b_save_pressed"]
+[connection signal="pressed" from="b_clear" to="." method="_on_b_clear_pressed"]
+[connection signal="popup_hide" from="request_binding" to="." method="_on_request_binding_popup_hide"]
+[connection signal="pressed" from="request_binding/b_accept" to="." method="_on_b_accept_pressed"]
+[connection signal="pressed" from="request_binding/b_cancel" to="." method="_on_b_cancel_pressed"]

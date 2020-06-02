@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripting/obj_context_menu.gd" type="Script" id=1]
+
+[node name="obj_context_menu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="w_context_menu" type="WindowDialog" parent="."]
+visible = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -73.0
+margin_top = -20.0
+margin_right = 73.0
+margin_bottom = 113.0
+window_title = "Object Options"
+
+[node name="b_pickup" type="Button" parent="w_context_menu"]
+margin_right = 146.0
+margin_bottom = 21.0
+text = "Pickup Object"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="w_context_menu/b_pickup" to="." method="_on_b_pickup_pressed"]

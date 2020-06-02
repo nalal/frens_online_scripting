@@ -1,0 +1,12 @@
+[gd_resource type="SpatialMaterial" load_steps=5 format=2]
+
+[ext_resource path="mud_0_normal.png" type="Texture" id=3]
+
+[resource]
+albedo_color = Color(0.355469, 0.232443, 0.047905, 1)
+metallic = 0
+roughness = 1
+normal_enabled = true
+normal_scale = 10
+normal_texture = ExtResource( 3 )
+

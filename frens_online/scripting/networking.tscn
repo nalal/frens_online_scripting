@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripting/networking.gd" type="Script" id=1]
+[ext_resource path="res://scripting/load_level.gd" type="Script" id=2]
+
+[node name="game" type="Node"]
+script = ExtResource( 1 )
+
+[node name="level_buffer" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="player_list" type="Node" parent="."]
+
+[node name="tic_timer" type="Timer" parent="."]
+[connection signal="timeout" from="tic_timer" to="." method="_on_tic_timer_timeout"]

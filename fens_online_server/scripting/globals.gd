@@ -1,9 +1,12 @@
 extends Node
 
-onready var configs_path = "configs"
-onready var custom_path = "custom"
-onready var data_path = "data"
-onready var settings_config_path = configs_path + "/settings.ini"
+#These will not change durring server runtime so can be made const
+const CONFIGS_PATH = "configs"
+const CUSTOM_PATH = "custom"
+const DATA_PATH = "data"
+
+#This is a concat with another path so must be a var
+onready var settings_config_path = CUSTOM_PATH + "/settings.ini"
 onready var server_encryption_key
 onready var config_data = ConfigFile.new()
 
@@ -11,11 +14,17 @@ onready var rand_generator = RandomNumberGenerator.new()
 var debug_mode = false
 var freshStart = true
 
+#Server port
 var port
+#Maximum players per server
 var max_players
+#Server ticrate
 var tic_rate
+#Starting level to load
 var start_level
+#RCON password
 var rcon_pass
+#Server bind IP
 var ip_address
 
 func _ready():
@@ -23,30 +32,33 @@ func _ready():
 	load_configs()
 	freshStart = false
 
+#Load config data
 func load_configs():
 	load_settings_config()
 	load_missing_settings()
-	
+
+#Go through required filesystems and check for existence
 func check_all_filesystems():
-	check_filesystem(configs_path)
-	check_filesystem(custom_path)
-	check_filesystem(data_path)
+	check_filesystem(CONFIGS_PATH)
+	check_filesystem(CUSTOM_PATH)
+	check_filesystem(DATA_PATH)
 	pass
 
+#Check for path in server DIR
+#[path] = path to check (string)
 func check_filesystem(path):
 	var dir = Directory.new()
 	dir.open(".")
 	if !dir.dir_exists(path):
 		print("Folder '" + path + "' not found, rebuilding...")
 		dir.make_dir(path)
-	pass
-	
-# Save
+
+#Save config data to config file
 func save_settings_config():
 	load_missing_settings()
 	config_data.save(settings_config_path)
 
-
+#Parse settings and load any missing as default 
 func load_missing_settings():
 	# var config_data = ConfigFile.new()
 	if config_data.load(settings_config_path) == OK:
@@ -69,47 +81,53 @@ func load_missing_settings():
 		
 		if not config_data.has_section_key("network", "ip_address"):
 			ip_address = config_data.set_value("network", "ip_address", "0.0.0.0")
-			
+		
+		#	May not want to set encryption key on load, server data will be encrypted with it so any random changes to this
+		#could result in data loss due to loss of generated key, perhaps it should be stored in a file somewhere in the 
+		#server's DIR, we'll have too see I guess, works for now so w/e.
 		if not config_data.has_section_key("network", "server_encryption_key"):
 			if debug_mode:
 				print("Generating server_encryption_key.")
 			server_encryption_key = config_data.set_value("network", "server_encryption_key", generate_random_string(32))
-			
 
+#Load config file
 func load_settings_config():
-
 	if config_data.load(settings_config_path) == OK:
 		if config_data.has_section("network"):
 			for entry in config_data.get_section_keys("network"):
 				var entryval = config_data.get_value("network", entry)
-				if entry == "tic_rate":
-					print("TIC RATE: ", entryval)
-					tic_rate = entryval
-				elif entry == "port":
-					print("PORT: ", entryval)
-					port = entryval
-				elif entry == "max_players":
-					print("MAX PLAYERS: ", entryval)
-					max_players = entryval
-				elif entry == "start_level":
-					print("START LEVEL: ", quote(entryval))
-					start_level = entryval
-				elif entry == "rcon_pass":
-					print("RCON PASS IS SET")
-					rcon_pass = entryval
-				elif entry == "ip_address":
-					print("IPADDRESS: ", entryval)
-					ip_address = entryval
-				elif entry == "server_encryption_key":
-					print("SERVER ENCRYPTION KEY SET")
-					server_encryption_key = entryval
+				match entry:
+					"tic_rate":
+						print("TIC RATE: ", entryval)
+						tic_rate = entryval
+					"port":
+						print("PORT: ", entryval)
+						port = entryval
+					"max_players":
+						print("MAX PLAYERS: ", entryval)
+						max_players = entryval
+					"start_level":
+						print("START LEVEL: ", quote(entryval))
+						start_level = entryval
+					"rcon_pass":
+						print("RCON PASS IS SET")
+						rcon_pass = entryval
+					"ip_address":
+						print("IPADDRESS: ", entryval)
+						ip_address = entryval
+					"server_encryption_key":
+						print("SERVER ENCRYPTION KEY SET")
+						server_encryption_key = entryval
 		else:
 			print("invalid Config, Attempting Repair...")
 			reload_settings()
 	else:
 		# We should really panic and kill it here, but meh, let it try and fix it anyway.
 		# - Phoenix
+		# Might be right, though what if the config folder/files are missing? Might not be a fequent concern but never know.
+		# - Nac
 		reload_settings()
+
 func reload_settings():
 	if freshStart == false:
 		print("Reloading Config")
@@ -117,6 +135,8 @@ func reload_settings():
 	save_settings_config()
 	load_settings_config()
 
+#Generate string of given length
+#[length] = length of string to generate (int)
 func generate_random_string(length):
 	var generated_string = ""
 	var buffer = PoolByteArray()
@@ -143,24 +163,33 @@ func generate_random_string(length):
 
 	return str(generated_string)
 
+#Wrap string in quotation marks
+#[string] = string to wrap (string)
 func quote(string):
-	return '"' + string + '"'
+	return "'" + string + "'" # Try to keep string quotes as " and in string quotes as '
 
+#Get server port
 func get_port():
 	return port
 
+#Get max players
 func get_player_max():
 	return max_players
-	
+
+#Get server IP
 func get_ip_address():
 	return ip_address
-	
+
+#Get ticrate
 func get_tic():
 	return tic_rate
 
+#Set specific level as starting level
+#[level] = level to set as start level (string)
 func set_start_level(level):
 	print("Start level is set to '" + level + "'")
 	start_level = level
 
+#Get starting level
 func get_start_level():
 	return start_level

@@ -11,12 +11,12 @@ onready var rand_generator = RandomNumberGenerator.new()
 var debug_mode = false
 var freshStart = true
 
-var PORT
-var MAX_PLAYERS
+var port
+var max_players
 var tic_rate
 var start_level
 var rcon_pass
-var IP_ADDRESS
+var ip_address
 
 func _ready():
 	check_all_filesystems()
@@ -51,13 +51,13 @@ func load_missing_settings():
 	# var config_data = ConfigFile.new()
 	if config_data.load(settings_config_path) == OK:
 		if not config_data.has_section_key("network", "port"):
-			PORT = config_data.set_value("network", "port", 25565)
+			port = config_data.set_value("network", "port", 25565)
 	
 		if not config_data.has_section_key("network", "tic_rate"):
 			tic_rate = config_data.set_value("network", "tic_rate", 10)
 	
 		if not config_data.has_section_key("network", "max_players"):
-			MAX_PLAYERS = config_data.set_value("network", "max_players", 16)
+			max_players = config_data.set_value("network", "max_players", 16)
 	
 		if not config_data.has_section_key("network", "start_level"):
 			start_level = config_data.set_value("network", "start_level", "Entry Level")
@@ -68,7 +68,7 @@ func load_missing_settings():
 			rcon_pass = config_data.set_value("network", "rcon_pass", generate_random_string(16))
 		
 		if not config_data.has_section_key("network", "ip_address"):
-			IP_ADDRESS = config_data.set_value("network", "ip_address", "0.0.0.0")
+			ip_address = config_data.set_value("network", "ip_address", "0.0.0.0")
 			
 		if not config_data.has_section_key("network", "server_encryption_key"):
 			if debug_mode:
@@ -87,10 +87,10 @@ func load_settings_config():
 					tic_rate = entryval
 				elif entry == "port":
 					print("PORT: ", entryval)
-					PORT = entryval
+					port = entryval
 				elif entry == "max_players":
 					print("MAX PLAYERS: ", entryval)
-					MAX_PLAYERS = entryval
+					max_players = entryval
 				elif entry == "start_level":
 					print("START LEVEL: ", quote(entryval))
 					start_level = entryval
@@ -99,7 +99,7 @@ func load_settings_config():
 					rcon_pass = entryval
 				elif entry == "ip_address":
 					print("IPADDRESS: ", entryval)
-					IP_ADDRESS = entryval
+					ip_address = entryval
 				elif entry == "server_encryption_key":
 					print("SERVER ENCRYPTION KEY SET")
 					server_encryption_key = entryval
@@ -147,13 +147,13 @@ func quote(string):
 	return '"' + string + '"'
 
 func get_port():
-	return PORT
+	return port
 
 func get_player_max():
-	return MAX_PLAYERS
+	return max_players
 	
 func get_ip_address():
-	return IP_ADDRESS
+	return ip_address
 	
 func get_tic():
 	return tic_rate

@@ -121,6 +121,7 @@ func _on_il_parts_item_selected(index):
 #when window is closed, remove customizer window if open
 func _on_wd_customize_hide():
 	clear_box_buffer()
+	loaded_model.get_parent().remove_child(loaded_model)
 	match first_load:
 		true:
 			first_load = false
@@ -160,4 +161,3 @@ func _on_b_save_pressed():
 	save_obj.model_id = loaded_model.get_name()
 	save_obj.settings = settings_list
 	#save(save_obj)
-	pass # Replace with function body.

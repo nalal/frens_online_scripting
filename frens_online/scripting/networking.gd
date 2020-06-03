@@ -77,7 +77,8 @@ func send_message(message):
 		print("Message cannot be blank.")
 
 func process_local_command(command):
-	match command:
+	var command_array = command.split(" ")
+	match command_array[0]:
 		"!customize":
 			var custom_menu = load("res://assets/wd_customize.tscn").instance()
 			add_child(custom_menu)

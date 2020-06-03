@@ -8,10 +8,8 @@ onready var connection_dialog = $connection_dialog
 onready var le_ip = $connection_dialog/le_ip
 onready var le_port = $connection_dialog/le_port
 onready var wd_credits = $wd_credits
-onready var wd_customize = $wd_customize
 
 func _ready():
-	wd_customize.show()
 	if globals.is_kicked:
 		globals.is_kicked = false
 		message_box.call_message_box("Disconnected", globals.get_kick_message())

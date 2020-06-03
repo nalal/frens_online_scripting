@@ -77,6 +77,12 @@ func send_message(message):
 		print("Message cannot be blank.")
 
 func process_local_command(command):
+	match command:
+		"!customize":
+			var custom_menu = load("res://assets/wd_customize.tscn").instance()
+			add_child(custom_menu)
+			get_node(custom_menu.get_name()).show()
+			pass
 	pass
 
 #send player name to server

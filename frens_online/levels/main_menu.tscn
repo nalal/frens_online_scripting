@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripting/main_menu.gd" type="Script" id=1]
 [ext_resource path="res://assets/menu.png" type="Texture" id=2]
 [ext_resource path="res://assets/text_box.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripting/wd_credits.gd" type="Script" id=4]
-[ext_resource path="res://assets/wd_customize.tscn" type="PackedScene" id=5]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -247,8 +246,6 @@ margin_top = 93.0
 margin_right = 23.5
 margin_bottom = 113.0
 text = "Close"
-
-[node name="wd_customize" parent="." instance=ExtResource( 5 )]
 [connection signal="pressed" from="Control/b_play" to="." method="_on_Play_pressed"]
 [connection signal="pressed" from="Control/b_options" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Control/b_local" to="." method="_on_b_local_pressed"]

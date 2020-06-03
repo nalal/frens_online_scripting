@@ -12,7 +12,6 @@ var name_id_list = []
 var synced_objs = []
 #has no one loaded into the level yet
 var level_fresh = true
-
 #player data object
 #[p_name] = player name (string)
 #[p_id] = player ID (int)
@@ -47,16 +46,21 @@ master func update_obj_pos(obj):
 #start server process
 func init_conn_handler():
 	var network = NetworkedMultiplayerENet.new()
-	network.set_bind_ip("127.0.0.1")
-	network.create_server(globals.get_port(), 10)
-	network.connect("peer_connected", self, "_peer_connected")
-	network.connect("peer_disconnected", self, "_peer_disconnected")
-	get_tree().set_network_peer(network)
-	get_tree().multiplayer.connect("network_peer_packet", self, "_packet_recieved")
-	print("Connection listener started.")
-	print("Server ID is '" + str(get_tree().get_network_unique_id()) + "'")
-	#add master to list of users connected
-	_peer_connected(1)
+	if globals.get_ip_address().is_valid_ip_address():
+		network.set_bind_ip(globals.get_ip_address())
+		network.create_server(globals.get_port(), globals.get_player_max())
+		network.connect("peer_connected", self, "_peer_connected")
+		network.connect("peer_disconnected", self, "_peer_disconnected")
+		get_tree().set_network_peer(network)
+		get_tree().multiplayer.connect("network_peer_packet", self, "_packet_recieved")
+		print("Connection listener started.")
+		print("Listening on ", globals.get_ip_address(),":",globals.get_port())
+		print("Server ID is '" + str(get_tree().get_network_unique_id()) + "'")
+		#add master to list of users connected
+		_peer_connected(1)
+	else:
+		print("IP Address ", globals.quote(globals.get_ip_address()), " is not a valid IP Address.")
+		
 
 #when peer connects, do this
 #[id] = ID of peer connected

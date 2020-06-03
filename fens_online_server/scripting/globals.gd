@@ -4,21 +4,29 @@ onready var configs_path = "configs"
 onready var custom_path = "custom"
 onready var data_path = "data"
 onready var settings_config_path = configs_path + "/settings.ini"
-onready var server_encryption_key = "password"
+onready var server_encryption_key
+onready var config_data = ConfigFile.new()
 
-var PORT = 25565
-var MAX_PLAYERS = 16
-var tic_rate = 16
+onready var rand_generator = RandomNumberGenerator.new()
+var debug_mode = false
+var freshStart = true
+
+var PORT
+var MAX_PLAYERS
+var tic_rate
 var start_level
-var rcon_pass = "unset"
+var rcon_pass
+var IP_ADDRESS
 
 func _ready():
 	check_all_filesystems()
 	load_configs()
+	freshStart = false
 
 func load_configs():
 	load_settings_config()
-
+	load_missing_settings()
+	
 func check_all_filesystems():
 	check_filesystem(configs_path)
 	check_filesystem(custom_path)
@@ -32,41 +40,121 @@ func check_filesystem(path):
 		print("Folder '" + path + "' not found, rebuilding...")
 		dir.make_dir(path)
 	pass
+	
+# Save
+func save_settings_config():
+	load_missing_settings()
+	config_data.save(settings_config_path)
+
+
+func load_missing_settings():
+	# var config_data = ConfigFile.new()
+	if config_data.load(settings_config_path) == OK:
+		if not config_data.has_section_key("network", "port"):
+			PORT = config_data.set_value("network", "port", 25565)
+	
+		if not config_data.has_section_key("network", "tic_rate"):
+			tic_rate = config_data.set_value("network", "tic_rate", 10)
+	
+		if not config_data.has_section_key("network", "max_players"):
+			MAX_PLAYERS = config_data.set_value("network", "max_players", 16)
+	
+		if not config_data.has_section_key("network", "start_level"):
+			start_level = config_data.set_value("network", "start_level", "Entry Level")
+			
+		if not config_data.has_section_key("network", "rcon_pass"):
+			if debug_mode:
+				print("Generating rcon_pass.")
+			rcon_pass = config_data.set_value("network", "rcon_pass", generate_random_string(16))
+		
+		if not config_data.has_section_key("network", "ip_address"):
+			IP_ADDRESS = config_data.set_value("network", "ip_address", "0.0.0.0")
+			
+		if not config_data.has_section_key("network", "server_encryption_key"):
+			if debug_mode:
+				print("Generating server_encryption_key.")
+			server_encryption_key = config_data.set_value("network", "server_encryption_key", generate_random_string(32))
+			
 
 func load_settings_config():
-	var config_data = ConfigFile.new()
+
 	if config_data.load(settings_config_path) == OK:
-		for entry in config_data.get_section_keys("network"):
-			var entryval = config_data.get_value("network", entry)
-			if entry == "tic_rate":
-				print("TIC RATE: " + str(entryval))
-				tic_rate = entryval
-			elif entry == "port":
-				print("PORT: " + str(entryval))
-				PORT = entryval
-			elif entry == "max_players":
-				print("MAX PLAYERS: " + str(entryval))
-				MAX_PLAYERS = entryval
-			elif entry == "start_level":
-				print("START LEVEL: " + entryval)
-				start_level = entryval
-			elif entry == "rcon_pass":
-				print("RCON PASS IS SET")
-				rcon_pass = entryval
-			elif entry == "server_encryption_key":
-				print("SERVER ENCRYPTION KEY SET")
-				server_encryption_key = entryval
+		if config_data.has_section("network"):
+			for entry in config_data.get_section_keys("network"):
+				var entryval = config_data.get_value("network", entry)
+				if entry == "tic_rate":
+					print("TIC RATE: ", entryval)
+					tic_rate = entryval
+				elif entry == "port":
+					print("PORT: ", entryval)
+					PORT = entryval
+				elif entry == "max_players":
+					print("MAX PLAYERS: ", entryval)
+					MAX_PLAYERS = entryval
+				elif entry == "start_level":
+					print("START LEVEL: ", quote(entryval))
+					start_level = entryval
+				elif entry == "rcon_pass":
+					print("RCON PASS IS SET")
+					rcon_pass = entryval
+				elif entry == "ip_address":
+					print("IPADDRESS: ", entryval)
+					IP_ADDRESS = entryval
+				elif entry == "server_encryption_key":
+					print("SERVER ENCRYPTION KEY SET")
+					server_encryption_key = entryval
+		else:
+			print("invalid Config, Attempting Repair...")
+			reload_settings()
 	else:
-		print("Failed loading config")
-	if rcon_pass == "unset":
-				print("RCON PASS IS NOT SET, RCON DISABLED")
+		# We should really panic and kill it here, but meh, let it try and fix it anyway.
+		# - Phoenix
+		reload_settings()
+func reload_settings():
+	if freshStart == false:
+		print("Reloading Config")
+	
+	save_settings_config()
+	load_settings_config()
+
+func generate_random_string(length):
+	var generated_string = ""
+	var buffer = PoolByteArray()
+		
+	var char_count = length
+	while char_count > 0:
+		var letter = ""
+		var char_set = randi() % 3
+		match char_set:
+			0: # A-Z
+				letter = rand_generator.randi_range(65,90)
+			1: # a-z
+				letter = rand_generator.randi_range(97,112)
+			2:  # 0-9
+				letter = rand_generator.randi_range(48,57)
+		buffer.append(letter)
+		char_count -= 1
+
+	generated_string = buffer.get_string_from_ascii()
+	if generated_string.length() < length:
+		print("This is longer than it should be, Da fuck?") 
+	if debug_mode: 
+		print("[generate_random_string]: ", str(generated_string))
+
+	return str(generated_string)
+
+func quote(string):
+	return '"' + string + '"'
 
 func get_port():
 	return PORT
 
 func get_player_max():
 	return MAX_PLAYERS
-
+	
+func get_ip_address():
+	return IP_ADDRESS
+	
 func get_tic():
 	return tic_rate
 

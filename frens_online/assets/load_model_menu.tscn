@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripting/load_model_menu.gd" type="Script" id=1]
+
+[node name="wd_load_model" type="WindowDialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 606.482
+margin_top = 199.453
+margin_right = -1020.52
+margin_bottom = -564.547
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="l_model" type="Label" parent="."]
+margin_left = 1.0
+margin_top = 2.0
+margin_right = 292.0
+margin_bottom = 25.0
+text = "No model selected"
+
+[node name="il_model_template_list" type="ItemList" parent="."]
+margin_left = 2.0
+margin_top = 26.0
+margin_right = 293.0
+margin_bottom = 293.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="il_model_list" type="ItemList" parent="."]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 292.0
+margin_bottom = 293.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_load" type="Button" parent="."]
+margin_left = 248.0
+margin_top = 295.0
+margin_right = 290.0
+margin_bottom = 315.0
+disabled = true
+text = "Load"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="item_selected" from="il_model_template_list" to="." method="_on_il_model_template_list_item_selected"]
+[connection signal="item_selected" from="il_model_list" to="." method="_on_il_model_list_item_selected"]
+[connection signal="pressed" from="b_load" to="." method="_on_b_load_pressed"]

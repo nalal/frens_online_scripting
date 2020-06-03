@@ -1,6 +1,6 @@
 extends Node
 
-enum {NAME_PACKET, MESSAGE_PACKET, POS_PACKET, REQUEST_TICK_PACKET, COMMAND_PACKET, OBJ_PACKET, PHYS_INTERACT_PACKET, THROW_PACKET, MOVE_PACKET, OBJ_UPDATE_PACKET}
+enum {NAME_PACKET, MESSAGE_PACKET, POS_PACKET, REQUEST_TICK_PACKET, COMMAND_PACKET, OBJ_PACKET, PHYS_INTERACT_PACKET, THROW_PACKET, MOVE_PACKET, OBJ_UPDATE_PACKET, PLAYER_MODEL_DATA_PACKET}
 
 puppet var start_level
 onready var tic_timer
@@ -76,15 +76,18 @@ func send_message(message):
 	else:
 		print("Message cannot be blank.")
 
+#get local command and process it
+#[command] = command to process (string)
 func process_local_command(command):
 	var command_array = command.split(" ")
 	match command_array[0]:
 		"!customize":
-			var custom_menu = load("res://assets/wd_customize.tscn").instance()
+			var custom_menu = load("res://assets/load_model_menu.tscn").instance()
 			add_child(custom_menu)
 			get_node(custom_menu.get_name()).show()
-			pass
-	pass
+			return
+	var player = get_node("/root/game/level_buffer/Level/player")
+	player.load_message("Invalid command '" + command + "'")
 
 #send player name to server
 #[player_name] = name to send
@@ -131,6 +134,9 @@ func send_packet(packet, type, id = 1):
 			return
 		MOVE_PACKET:
 			rpc_id(id, "send_move", packet)
+			return
+		PLAYER_MODEL_DATA_PACKET:
+			rpc_id(id, "send_model_data", packet)
 			return
 	print("INVALID PACKET TYPE " + str(type))
 
@@ -259,6 +265,9 @@ puppet func update_player_pos(arg):
 func send_player_move(arg):
 	send_packet(arg, MOVE_PACKET)
 
+func send_player_model_data(model_data):
+	send_packet(model_data, PLAYER_MODEL_DATA_PACKET)
+
 #sets the current level loaded from server
 #[level] = level to be loaded (string)
 puppet func set_level(level):
@@ -274,3 +283,10 @@ puppet func send_obj_pos():
 remote func update_obj_pos(obj):
 	level.get_level_entity(obj[0]).set_pos(obj[1])
 	level.get_level_entity(obj[0]).throw(obj[2])
+
+puppet func update_model(model_data, id):
+	match id:
+		local_id:
+			return
+	print(str(model_data))
+	get_puppet(id).set_puppet_model(model_data)

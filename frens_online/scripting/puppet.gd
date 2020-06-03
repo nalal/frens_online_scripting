@@ -18,9 +18,10 @@ var gravity = 5
 #player entity variables
 onready var pu_name_render = get_node("name_box")
 onready var pu_collide = $player_collide
-onready var pu_model = $player_collide/player_model
+export onready var pu_model #= $player_collide/player_model
 onready var throw_point = $player_collide/throw_point
-onready var player_model = $player_collide/player_model
+export onready var player_model #= $player_collide/player_model
+export onready var default_model = load("res://assets/models/hors.tscn")
 onready var selected_obj
 
 #puppet init
@@ -29,6 +30,9 @@ func _ready():
 	print("Puppet '" + pu_name + "' loaded.")
 	print("Setting Puppet name on name box to '" + pu_name + "'")
 	pu_name_render.set_puppet_name(pu_name)
+	pu_collide.add_child(default_model.instance())
+	pu_model = get_node("player_collide/hors")
+	player_model = get_node("player_collide/hors")
 	#pu_model.set_scale(Vector3(0.5,0.5,0.5))
 
 #per physics frame check
@@ -94,3 +98,11 @@ func play_animation(anim):
 #delete puppet from scene
 func remove_puppet():
 	get_parent().remove_child(self)
+
+func set_puppet_model(model_data):
+	for af in model_data["asset_flags"]:
+		match af:
+			enums.M_ASSET_FLAGS.COLOR:
+				pu_model.set_part_color(model_data["asset_id"], model_data["asset_color"])
+			enums.M_ASSET_FLAGS.TOGGLE:
+				pu_model.set_part_visibility(model_data["asset_id"], model_data["asset_visible"])

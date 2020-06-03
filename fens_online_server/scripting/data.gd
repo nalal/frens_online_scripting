@@ -13,7 +13,7 @@ func _ready():
 func master_pass_list_init():
 	var f = File.new()
 	var err
-	if f.file_exists(globals.data_path + "/SERVER.fos"):
+	if f.file_exists(globals.DATA_PATH + "/SERVER.fos"):
 		print("Server data found, checking access key.")
 		test_server_data()
 	else:
@@ -25,13 +25,13 @@ func create_server_data():
 	var f = File.new()
 	var err
 	print("Creating server data.")
-	f.open_encrypted_with_pass(globals.data_path + "/SERVER.fos", File.WRITE, globals.server_encryption_key)
+	f.open_encrypted_with_pass(globals.DATA_PATH + "/SERVER.fos", File.WRITE, globals.server_encryption_key)
 	f.store_var()
 	f.close()
 
 func test_server_data():
 	var f = File.new()
-	var err = f.open_encrypted_with_pass(globals.data_path + "/SERVER.fos", File.READ, globals.server_encryption_key)
+	var err = f.open_encrypted_with_pass(globals.DATA_PATH + "/SERVER.fos", File.READ, globals.server_encryption_key)
 	match err:
 		ERR_FILE_CORRUPT:
 			print("Server data could not be loaded, regenerating.")
@@ -41,7 +41,7 @@ func test_server_data():
 
 func load_server_data():
 	var f = File.new()
-	var err = f.open_encrypted_with_pass(globals.data_path + "/SERVER.fos", File.READ, globals.server_encryption_key)
+	var err = f.open_encrypted_with_pass(globals.DATA_PATH + "/SERVER.fos", File.READ, globals.server_encryption_key)
 	match err:
 		ERR_FILE_CORRUPT:
 			print("Server data could not be loaded.")
@@ -56,7 +56,7 @@ func load_server_data():
 func player_data_init(uname, passwd, ip):
 	var f = File.new()
 	var data
-	if f.file_exists(globals.data_path + "/" + uname + ".fos"):
+	if f.file_exists(globals.DATA_PATH + "/" + uname + ".fos"):
 		print("Loading data for '" + uname + "'")
 		data = load_player_data(uname)
 	else:
@@ -70,7 +70,7 @@ func player_data_init(uname, passwd, ip):
 #[ip] = IP of user connected (string)
 func create_player_data(uname, passwd, ip):
 	var f = File.new()
-	var err = f.open_encrypted(globals.data_path + "/" + uname + ".fos", File.WRITE, ENCRYPTION_KEY.to_ascii())
+	var err = f.open_encrypted(globals.DATA_PATH + "/" + uname + ".fos", File.WRITE, ENCRYPTION_KEY.to_ascii())
 	var save_data = {
 		"name" : uname,
 		"password" : passwd,
@@ -88,7 +88,7 @@ func create_player_data(uname, passwd, ip):
 #[uname] = username to load
 func load_player_data(uname):
 	var f = File.new()
-	var err = f.open_encrypted(globals.data_path + "/" + uname + ".fos", File.READ, ENCRYPTION_KEY.to_ascii())
+	var err = f.open_encrypted(globals.DATA_PATH + "/" + uname + ".fos", File.READ, ENCRYPTION_KEY.to_ascii())
 	print(str(err))
 	match err:
 		ERR_FILE_CORRUPT:
@@ -104,7 +104,7 @@ func load_player_data(uname):
 #[data] = data to save to file (var)
 func save_player_data(uname, data):
 	var f = File.new()
-	var err = f.open_encrypted(globals.data_path + "/" + uname + ".fos", File.WRITE, ENCRYPTION_KEY.to_ascii())
+	var err = f.open_encrypted(globals.DATA_PATH + "/" + uname + ".fos", File.WRITE, ENCRYPTION_KEY.to_ascii())
 	match err:
 		ERR_FILE_CORRUPT:
 			print("Could not load player data, data is corrupt.")
@@ -123,7 +123,7 @@ func save_data(data_dir, file_name, data, encrypted = false):
 	match encrypted:
 		true:
 			var f = File.new()
-			var err = f.open_encrypted(globals.data_path + "/" + data_dir + "/" + file_name + ".fos", File.WRITE, ENCRYPTION_KEY.to_ascii())
+			var err = f.open_encrypted(globals.DATA_PATH + "/" + data_dir + "/" + file_name + ".fos", File.WRITE, ENCRYPTION_KEY.to_ascii())
 			match err:
 				ERR_FILE_CORRUPT:
 					print("Could not load player data, data is corrupt.")
@@ -135,7 +135,7 @@ func save_data(data_dir, file_name, data, encrypted = false):
 			return OK
 		false:
 			var f = File.new()
-			var err = f.open(globals.data_path + "/" + data_dir + "/" + file_name + ".fos", File.WRITE)
+			var err = f.open(globals.DATA_PATH + "/" + data_dir + "/" + file_name + ".fos", File.WRITE)
 			match err:
 				ERR_FILE_CORRUPT:
 					print("Could not load player data, data is corrupt.")
@@ -155,7 +155,7 @@ func load_data(data_dir, file_name, encrypted = false):
 	match encrypted:
 		true:
 			var f = File.new()
-			var err = f.open_encrypted(globals.data_path + "/" + data_dir + "/" + file_name + ".fos", File.READ, ENCRYPTION_KEY.to_ascii())
+			var err = f.open_encrypted(globals.DATA_PATH + "/" + data_dir + "/" + file_name + ".fos", File.READ, ENCRYPTION_KEY.to_ascii())
 			match err:
 				ERR_FILE_CORRUPT:
 					print("Could not load player data, data is corrupt.")
@@ -166,7 +166,7 @@ func load_data(data_dir, file_name, encrypted = false):
 			f.close()
 		false:
 			var f = File.new()
-			var err = f.open(globals.data_path + "/" + data_dir + "/" + file_name + ".fos", File.READ)
+			var err = f.open(globals.DATA_PATH + "/" + data_dir + "/" + file_name + ".fos", File.READ)
 			match err:
 				ERR_FILE_CORRUPT:
 					print("Could not load player data, data is corrupt.")

@@ -4,6 +4,8 @@ onready var cp_ent_color = $wd_panel/vbc_customizer/cp_ent_color
 onready var cb_ent_enabled = $wd_panel/vbc_customizer/cb_ent_enabled
 onready var wd_panel = $wd_panel
 
+onready var open = false
+
 var color_selected
 var render_toggle
 
@@ -39,3 +41,17 @@ func _on_cb_ent_enabled_toggled(button_pressed):
 
 func get_render_toggle():
 	return render_toggle
+
+
+func _on_wd_panel_popup_hide():
+	get_parent().remove_child(self)
+	pass # Replace with function body.
+
+
+func _on_wd_panel_hide():
+	match open:
+		false:
+			open = true
+			return
+	get_parent().remove_child(self)
+	pass # Replace with function body.

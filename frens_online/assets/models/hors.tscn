@@ -75,6 +75,7 @@ surfaces/0 = {
 }
 
 [sub_resource type="ArrayMesh" id=5]
+resource_local_to_scene = true
 resource_name = "Cube.003"
 surfaces/0 = {
 "aabb": AABB( -1, -1, -1, 2, 2.00001, 2 ),

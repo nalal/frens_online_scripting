@@ -46,7 +46,7 @@ onready var is_player_chatting = false
 onready var show_fps = true
 #player entity variables
 #todo: clean pointless vars and label with comments
-onready var player_model = $player_collide/player_model
+export onready var player_model #= $player_collide/player_model
 onready var p_cam = $player_collide/cam_rotate/head
 onready var p_jump_area = $player_collide/p_jump_area
 onready var p_collide = $player_collide
@@ -63,6 +63,7 @@ onready var pause_menu = $pause_menu
 onready var p_cam_lens = $player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/tp_cam
 onready var p_cam_r = $player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/tp_cam/r_cam
 onready var throw_point = $player_collide/throw_point
+export onready var default_model = load("res://assets/models/hors.tscn")
 var render_dist
 
 
@@ -75,13 +76,21 @@ func _ready():
 		print("Player name '" + p_name + "' is greater than max name size")
 	print("Player '" + p_name + "' loaded.")
 	#set name above player to player's name
+	p_collide.add_child(default_model.instance())
 	p_name_render.set_player_name(p_name)
 	#set player name in UI
 	h_p_info.set_player_hud_name(p_name)
 	h_p_info.set_version_text(g_version)
 	p_ray_f.add_exception(p_name_box)
 	p_cam_lens.set_zfar(globals.get_render_distance())
+	player_model = p_collide.get_node("hors")
 	set_fog_vals()
+
+func set_player_color(part, color):
+	player_model.set_part_color(part, color)
+
+func set_player_visibility(part, vis):
+	player_model.set_part_visibility(part, vis)
 
 func set_fog_vals():
 	var env = p_cam_lens.get_environment()

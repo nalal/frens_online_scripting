@@ -116,10 +116,45 @@ master func _message_recieved(data):
 func send_message(id, message):
 	rpc_id(id, "message_recieved", message)
 
+func check_name(peer_name):
+	var invalid_names = [
+		"CON",
+		"PRN",
+		"AUX", 
+		"NUL", 
+		"COM1", 
+		"COM2", 
+		"COM3", 
+		"COM4", 
+		"COM5", 
+		"COM6", 
+		"COM7", 
+		"COM8", 
+		"COM9", 
+		"LPT1", 
+		"LPT2", 
+		"LPT3", 
+		"LPT4", 
+		"LPT5", 
+		"LPT6", 
+		"LPT7", 
+		"LPT8",
+		"LPT9"
+	]
+	for n in invalid_names:
+		if n == peer_name.to_upper():
+			return false
+	return peer_name.is_valid_filename()
+
 #remote call for sending new player name to server
 #[data] = name received (ASCII)
 master func _name_recieved(data):
 	var peer_name = data.get_string_from_ascii()
+	peer_name = peer_name.strip_escapes()
+	var name_valid = check_name(peer_name)
+	match name_valid:
+		false:
+			kick_player(get_tree().get_rpc_sender_id())
 	var id
 	if peer_name == "MASTER":
 		id = 1
@@ -206,6 +241,10 @@ func get_id_from_name(p_name):
 		else:
 			i += 1 
 	return false
+
+master func send_model_data(model_data):
+	print("Sending model data for '" + str(get_tree().get_rpc_sender_id()) + "'")
+	rpc("update_model", model_data, get_tree().get_rpc_sender_id())
 
 #remove player from the game
 #[id] = ID of player to kick (int)

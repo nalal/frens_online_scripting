@@ -5,6 +5,8 @@ extends "res://scripting/player_model.gd"
 onready var anim_player = $AnimationPlayer
 onready var grab_point = $m_head/mouth_node
 
+export var vari = 0
+
 var body_parts = {
 	"Tail":["m_tail"],
 	"Body":["m_body"],
@@ -34,8 +36,12 @@ func play_animation(anim):
 func set_part_color(part, color):
 	for bp in body_parts[part]:
 		var change_part = get_node(bp)
-		var mesh = change_part.get_mesh().surface_get_material(0)
+		var mesh = SpatialMaterial.new()
+		#change_part.get_mesh().surface_get_material(0)
+		#print(change_part.get_mesh().surface_get_material(0))
 		mesh.set_albedo(color)
+		change_part.material_override = mesh
+		#change_part.get_mesh().surface_set_material(0, mesh)
 
 func set_part_visibility(part, vis):
 	for bp in body_parts[part]:

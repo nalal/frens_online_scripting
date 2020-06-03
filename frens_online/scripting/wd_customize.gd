@@ -41,7 +41,6 @@ func _physics_process(delta):
 		null:
 			return
 	for f in flags:
-		print(str(f))
 		match f:
 			enums.M_ASSET_FLAGS.COLOR:
 				set_color()
@@ -72,11 +71,14 @@ func _on_b_open_model_list_pressed():
 func _on_rtl_model_list_item_selected(index):
 	for m in models_list:
 		if m["name"] == rtl_model_list.get_item_text(index):
-			var m_load = load(m["path"]).instance()
-			model_render_area.add_child(m_load)
+			var m_load = load(m["path"])
+			#m_load.set_name(m["name"])
+			var add = m_load.instance()
+			#add.set_name(m["name"])
+			model_render_area.add_child(add, true)
 			b_open_model_list.text = m["name"]
 			l_placeholder.hide()
-			loaded_model = model_render_area.get_node(m_load.get_name())
+			loaded_model = model_render_area.get_node(add.get_name())
 	load_buttons()
 	il_parts.show()
 	rtl_model_list.hide()
@@ -178,6 +180,7 @@ func _on_b_save_name_pressed():
 					save_data["asset_color"] = loaded_model.get_part_color(a.asset_id)
 				enums.M_ASSET_FLAGS.TOGGLE:
 					save_data["asset_visible"] = loaded_model.get_part_visibility(a.asset_id)
+		#globals.get_networking_node().send_player_model_data(save_data)
 		settings_list.push_back(save_data)
 	print(str((settings_list[0])["asset_flags"]))
 	print(str((settings_list[0])["asset_id"]))
@@ -194,6 +197,7 @@ func _on_b_save_name_pressed():
 
 func load_template(template):
 	for t in template["settings"]:
+		globals.get_networking_node().send_player_model_data(t)
 		for a in t["asset_flags"]:
 			match a:
 				enums.M_ASSET_FLAGS.COLOR:

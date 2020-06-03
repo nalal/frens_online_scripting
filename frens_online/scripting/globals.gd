@@ -17,7 +17,7 @@ onready var game_ver_major = 0
 onready var game_ver_minor = 0
 onready var game_ver_patch = 0
 #onready var game_ver = "v0.0.1"
-onready var release_build = "CLOSED ALPHA "
+const release_build = "CLOSED ALPHA "
 onready var current_level
 onready var render_distance = 100
 
@@ -41,6 +41,7 @@ func load_models():
 	print("Loading models.")
 	var horse_model = {
 		"name":"Horse",
+		"id":"hors",
 		"path":"res://assets/models/hors.tscn"
 	}
 	add_model_to_list(horse_model)

@@ -2,8 +2,6 @@ extends Node
 
 onready var tic_timer = $tic_timer
 
-#to be removed
-var proceesing_tic = false
 #position update array
 var pos_update = []
 #player list
@@ -89,7 +87,7 @@ func _peer_connected(id):
 func _peer_disconnected(id):
 	print("User ID '" + str(id) + "' disconnected, removing player data.")
 	var player_remove = get_node("./players/" + str(id))
-	announce_players("Player '" + player_remove.player_name +"' disconnected")
+	sys_message(-1, "Player '" + player_remove.player_name +"' disconnected")
 	get_node("./players").remove_child(player_remove)
 	remove_disconnected_player(id)
 
@@ -133,7 +131,7 @@ master func _name_recieved(data):
 	player_node.set_p_id(id)
 	send_player(id, data)
 	send_connected_players(id)
-	announce_players("Player '" + peer_name + "' joined the server.")
+	sys_message(-1, "Player '" + peer_name + "' joined the server.")
 	var new_player = player_data.new()
 	new_player.p_name = peer_name
 	new_player.p_id = id
@@ -142,6 +140,7 @@ master func _name_recieved(data):
 	else:
 		new_player.p_role = enums.ROLES.USER
 		load_sync_list(id)
+		#commented out due to not working on phys obj sync at this time
 		#match level_fresh:
 		#	false:
 		#		rpc_id(get_node("players").get_child(0).get_p_id(),"send_obj_pos")
@@ -151,9 +150,9 @@ master func _name_recieved(data):
 
 #send message globally (deprecated, to be removed, use sys_message with ID of -1)
 #[message] = message to send to everyone (string)
-func announce_players(message):
-	message = "[SYSTEM]: " + message
-	rpc("message_recieved", 1, message.to_ascii())
+#func announce_players(message):
+#	message = "[SYSTEM]: " + message
+#	rpc("message_recieved", 1, message.to_ascii())
 
 #send system message to ID
 #[id] = ID of player to send message to (int) (if is -1 send to all connected)
@@ -214,7 +213,7 @@ func kick_player(id):
 	print("Player ID '" + str(id) + "' kicked")
 	get_tree().get_network_peer().disconnect_peer(id)
 	if get_player_node(id).get_p_name() != null:
-		announce_players("Player '" + get_player_node(id).get_p_name() + "' was kicked.")
+		sys_message(-1, "Player '" + get_player_node(id).get_p_name() + "' was kicked.")
 	remove_disconnected_player(id)
 
 #send player name and ID to client to load as puppet

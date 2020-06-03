@@ -10,6 +10,12 @@ onready var b_open_model_list = $b_open_model_list
 onready var l_placeholder = $l_placeholder
 onready var il_parts = $il_parts
 onready var b_save = $b_save
+onready var wd_save = $wd_save
+onready var le_name = $wd_save/vbc_template/le_name
+onready var b_load = $b_load
+onready var wd_load = $wd_load
+onready var il_templates = $wd_load/il_templates
+onready var b_load_name = $wd_load/b_load_name
 onready var customizer_box
 
 var first_load = true
@@ -17,6 +23,8 @@ var loaded_model
 var cur_color
 var cur_visible
 var flags
+var templates
+var selected_load
 
 func _ready():
 	models_list = globals.get_model_list()
@@ -76,8 +84,15 @@ func _on_rtl_model_list_item_selected(index):
 
 func load_buttons():
 	var assets = loaded_model.get_assets()
+	il_parts.clear()
 	for a in assets:
 		il_parts.add_item(a.asset_id)
+	var saved_templates = data.load_model_data(loaded_model.get_name())
+	match saved_templates:
+		false:
+			return
+	templates = saved_templates
+	b_load.set_disabled(false)
 
 
 #func load_controls():
@@ -121,43 +136,87 @@ func _on_il_parts_item_selected(index):
 #when window is closed, remove customizer window if open
 func _on_wd_customize_hide():
 	clear_box_buffer()
-	loaded_model.get_parent().remove_child(loaded_model)
 	match first_load:
 		true:
 			first_load = false
 			return
+	if loaded_model != null:
+		loaded_model.get_parent().remove_child(loaded_model)
 	get_parent().remove_child(self)
 
-class custom_save:
-	var asset_id
-	var asset_color
-	var asset_visible
-	var asset_flags = []
+var custom_save ={
+	"asset_id" : "",
+	"asset_color" : "",
+	"asset_visible" : true,
+	"asset_flags" : []
+}
 
-class thing:
-	var model_id
-	var settings = []
+var model_template = {
+	"template_name" : "",
+	"settings" : []
+}
 
 func _on_b_save_pressed():
+	wd_save.show()
+
+
+
+func _on_b_save_name_pressed():
+	match le_name.text.length():
+		0:
+			return
 	var settings_list = []
 	var parts_dict = loaded_model.get_parts()
 	var assets = loaded_model.get_assets()
 	for a in assets:
-		var save_data = custom_save.new()
-		save_data.asset_flags = a.asset_flags
-		save_data.asset_id = a.asset_id
+		var save_data = custom_save
+		save_data["asset_flags"] = a.asset_flags
+		save_data["asset_id"] = a.asset_id
 		for af in a.asset_flags:
 			match af:
 				enums.M_ASSET_FLAGS.COLOR:
-					save_data.asset_color = loaded_model.get_part_color(a.asset_id)
+					save_data["asset_color"] = loaded_model.get_part_color(a.asset_id)
 				enums.M_ASSET_FLAGS.TOGGLE:
-					save_data.asset_visible = loaded_model.get_part_visibility(a.asset_id)
+					save_data["asset_visible"] = loaded_model.get_part_visibility(a.asset_id)
 		settings_list.push_back(save_data)
-#	print(str(settings_list[0].asset_flags))
-#	print(str(settings_list[0].asset_id))
-#	print(str(settings_list[0].asset_color))
-#	print(str(settings_list[0].asset_visible))
-	var save_obj = thing.new()
-	save_obj.model_id = loaded_model.get_name()
-	save_obj.settings = settings_list
-	#save(save_obj)
+	print(str((settings_list[0])["asset_flags"]))
+	print(str((settings_list[0])["asset_id"]))
+	print(str((settings_list[0])["asset_color"]))
+	print(str((settings_list[0])["asset_visible"]))
+	var save_obj = model_template
+	save_obj["template_name"] = le_name.text
+	save_obj["settings"] = settings_list
+	data.save_model_data(loaded_model.get_name(), save_obj)
+	load_buttons()
+	le_name.text = ""
+	wd_save.hide()
+#	data.test_save(loaded_model.get_name())
+
+func load_template(template):
+	for t in template["settings"]:
+		for a in t["asset_flags"]:
+			match a:
+				enums.M_ASSET_FLAGS.COLOR:
+					loaded_model.set_part_color(t["asset_id"], t["asset_color"])
+				enums.M_ASSET_FLAGS.TOGGLE:
+					loaded_model.set_part_visibility(t["asset_id"], t["asset_visible"])
+		print(t)
+
+
+func _on_b_load_pressed():
+	wd_load.show()
+	for t in templates["templates"]:
+		il_templates.add_item(t["template_name"])
+
+
+func _on_b_load_name_pressed():
+	for t in templates["templates"]:
+		if t["template_name"] == il_templates.get_item_text(selected_load):
+			load_template(t)
+	pass # Replace with function body.
+
+
+func _on_il_templates_item_selected(index):
+	selected_load = index
+	b_load_name.set_disabled(false)
+	pass # Replace with function body.

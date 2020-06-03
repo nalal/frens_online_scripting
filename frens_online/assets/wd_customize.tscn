@@ -3,14 +3,15 @@
 [ext_resource path="res://scripting/wd_customize.gd" type="Script" id=1]
 
 [node name="wd_customize" type="WindowDialog"]
+visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -391.0
-margin_top = -165.0
-margin_right = 268.0
-margin_bottom = 190.0
+margin_left = -329.5
+margin_top = -177.5
+margin_right = 329.5
+margin_bottom = 177.5
 window_title = "Model Customization"
 script = ExtResource( 1 )
 __meta__ = {
@@ -27,7 +28,7 @@ __meta__ = {
 [node name="v_model_render" type="Viewport" parent="vc_model_view"]
 size = Vector2( 257, 329 )
 handle_input_locally = false
-render_target_update_mode = 0
+render_target_update_mode = 3
 
 [node name="s_model_render_plane" type="Spatial" parent="vc_model_view/v_model_render"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0160394, 0 )
@@ -54,7 +55,6 @@ margin_bottom = 36.0
 text = "No Model Selected"
 
 [node name="il_parts" type="ItemList" parent="."]
-visible = false
 margin_left = 383.0
 margin_top = 20.0
 margin_right = 658.0
@@ -90,9 +90,96 @@ text = "Save"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="b_load" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -91.0
+margin_top = -20.0
+margin_right = -50.0
+disabled = true
+text = "Load"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="wd_save" type="WindowDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -164.5
+margin_top = -34.5
+margin_right = 164.5
+margin_bottom = 34.5
+window_title = "Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vbc_template" type="VBoxContainer" parent="wd_save"]
+margin_left = 1.0
+margin_right = 327.0
+margin_bottom = 66.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="l_info" type="Label" parent="wd_save/vbc_template"]
+margin_right = 326.0
+margin_bottom = 14.0
+text = "Template Name:"
+
+[node name="le_name" type="LineEdit" parent="wd_save/vbc_template"]
+margin_top = 18.0
+margin_right = 326.0
+margin_bottom = 42.0
+
+[node name="b_save_name" type="Button" parent="wd_save/vbc_template"]
+margin_top = 46.0
+margin_right = 326.0
+margin_bottom = 66.0
+text = "Save"
+
+[node name="wd_load" type="WindowDialog" parent="."]
+visible = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -155.5
+margin_top = -178.0
+margin_right = 155.5
+margin_bottom = 178.0
+window_title = "Saved Templates"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="il_templates" type="ItemList" parent="wd_load"]
+margin_left = 1.0
+margin_right = 310.0
+margin_bottom = 336.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_load_name" type="Button" parent="wd_load"]
+margin_left = 267.0
+margin_top = 336.0
+margin_right = 309.0
+margin_bottom = 356.0
+disabled = true
+text = "Load"
 [connection signal="hide" from="." to="." method="_on_wd_customize_hide"]
 [connection signal="popup_hide" from="." to="." method="_on_wd_customize_popup_hide"]
 [connection signal="pressed" from="b_open_model_list" to="." method="_on_b_open_model_list_pressed"]
 [connection signal="item_selected" from="il_parts" to="." method="_on_il_parts_item_selected"]
 [connection signal="item_selected" from="rtl_model_list" to="." method="_on_rtl_model_list_item_selected"]
 [connection signal="pressed" from="b_save" to="." method="_on_b_save_pressed"]
+[connection signal="pressed" from="b_load" to="." method="_on_b_load_pressed"]
+[connection signal="pressed" from="wd_save/vbc_template/b_save_name" to="." method="_on_b_save_name_pressed"]
+[connection signal="item_selected" from="wd_load/il_templates" to="." method="_on_il_templates_item_selected"]
+[connection signal="pressed" from="wd_load/b_load_name" to="." method="_on_b_load_name_pressed"]

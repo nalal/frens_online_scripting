@@ -77,3 +77,9 @@ func _on_b_enter_ip_pressed():
 func _on_b_credits_pressed():
 	wd_credits.show()
 	pass # Replace with function body.
+
+
+func _on_b_customize_pressed():
+	var customize_menu = load("res://assets/wd_customize.tscn").instance()
+	add_child(customize_menu)
+	get_node(customize_menu.get_name()).show()

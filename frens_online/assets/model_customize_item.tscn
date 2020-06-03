@@ -33,8 +33,10 @@ margin_right = 313.0
 margin_bottom = 462.0
 
 [node name="cb_ent_enabled" type="CheckButton" parent="wd_panel/vbc_customizer"]
-visible = false
 margin_right = 313.0
 margin_bottom = 40.0
+pressed = true
 text = "Visible"
 [connection signal="color_changed" from="wd_panel/vbc_customizer/cp_ent_color" to="." method="_on_cp_ent_color_color_changed"]
+[connection signal="pressed" from="wd_panel/vbc_customizer/cb_ent_enabled" to="." method="_on_cb_ent_enabled_pressed"]
+[connection signal="toggled" from="wd_panel/vbc_customizer/cb_ent_enabled" to="." method="_on_cb_ent_enabled_toggled"]

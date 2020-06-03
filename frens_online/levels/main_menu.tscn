@@ -249,7 +249,6 @@ margin_bottom = 113.0
 text = "Close"
 
 [node name="wd_customize" parent="." instance=ExtResource( 5 )]
-visible = true
 [connection signal="pressed" from="Control/b_play" to="." method="_on_Play_pressed"]
 [connection signal="pressed" from="Control/b_options" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Control/b_local" to="." method="_on_b_local_pressed"]

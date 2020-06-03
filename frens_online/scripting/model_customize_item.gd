@@ -4,6 +4,9 @@ onready var cp_ent_color = $wd_panel/vbc_customizer/cp_ent_color
 onready var cb_ent_enabled = $wd_panel/vbc_customizer/cb_ent_enabled
 onready var wd_panel = $wd_panel
 
+var color_selected
+var render_toggle
+
 func _ready():
 	wd_panel.show()
 	pass
@@ -19,6 +22,9 @@ func set_render_flags(flags):
 func set_window_name(set_name):
 	wd_panel.set_title(set_name)
 
+func get_window_name():
+	return wd_panel.get_title()
+
 func get_length():
 	return get_size()
 
@@ -26,4 +32,10 @@ func set_color(color):
 	cp_ent_color.set_pick_color(color)
 
 func _on_cp_ent_color_color_changed(color):
-	pass # Replace with function body.
+	color_selected = color
+
+func _on_cb_ent_enabled_toggled(button_pressed):
+	render_toggle = button_pressed
+
+func get_render_toggle():
+	return render_toggle

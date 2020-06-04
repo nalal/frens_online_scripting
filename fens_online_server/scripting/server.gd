@@ -52,6 +52,11 @@ func init_conn_handler():
 		get_tree().set_network_peer(network)
 		get_tree().multiplayer.connect("network_peer_packet", self, "_packet_recieved")
 		print("Connection listener started.")
+		if globals.get_encryption_status():
+			print("Encryption is Enabled.")
+		else:
+			print("Encryption is Disabled.")
+		
 		print("Listening on ", globals.get_ip_address(),":",globals.get_port())
 		print("Server ID is '" + str(get_tree().get_network_unique_id()) + "'")
 		#add master to list of users connected

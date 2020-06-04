@@ -6,11 +6,15 @@ const CUSTOM_PATH = "custom"
 const DATA_PATH = "data"
 
 #This is a concat with another path so must be a var
+# Shouldn't These be getting saved as configs and not custom? - Phoenix
 onready var settings_config_path = CUSTOM_PATH + "/settings.ini"
+onready var encryption_key_path = CUSTOM_PATH + "/encryption_key.ini"
+
 onready var server_encryption_key
 onready var config_data = ConfigFile.new()
-
+onready var encryption_key_config = ConfigFile.new()
 onready var rand_generator = RandomNumberGenerator.new()
+
 var debug_mode = false
 var freshStart = true
 
@@ -27,7 +31,17 @@ var rcon_pass
 #Server bind IP
 var ip_address
 
+# Encryption Enabled
+var encryption_enabled = false
+# Encryption Key
+var encryption_key
+# Encryption Status
+# if encryption_enabled returns true and we have a valid key, this becomes true 
+var encryption_status = false
+
 func _ready():
+	# Get a Randomized seed for RNG
+	randomize()
 	check_all_filesystems()
 	load_configs()
 	freshStart = false
@@ -35,7 +49,18 @@ func _ready():
 #Load config data
 func load_configs():
 	load_settings_config()
-	load_missing_settings()
+
+	port = config_data.get_value("network", "port")
+	max_players = config_data.get_value("network", "max_players")
+	tic_rate = config_data.get_value("network", "tic_rate")
+	start_level = config_data.get_value("network", "start_level")
+	rcon_pass = config_data.get_value("network", "rcon_pass")
+	ip_address = config_data.get_value("network", "ip_address")
+	encryption_enabled = config_data.get_value("encryption", "enabled")
+	if encryption_enabled:
+		encryption_key = encryption_key_config.get_value("encryption", "encryption_key")
+		if encryption_key != null || "":
+			encryption_status = true
 
 #Go through required filesystems and check for existence
 func check_all_filesystems():
@@ -55,78 +80,78 @@ func check_filesystem(path):
 
 #Save config data to config file
 func save_settings_config():
-	load_missing_settings()
 	config_data.save(settings_config_path)
+	if encryption_enabled:
+		encryption_key_config.save(encryption_key_path)
 
 #Parse settings and load any missing as default 
 func load_missing_settings():
-	# var config_data = ConfigFile.new()
-	if config_data.load(settings_config_path) == OK:
-		if not config_data.has_section_key("network", "port"):
-			port = config_data.set_value("network", "port", 25565)
+	var config_changes = 0
+	if not config_data.has_section_key("network", "port"):
+		config_data.set_value("network", "port", 25565)
+		config_changes += 1
 	
-		if not config_data.has_section_key("network", "tic_rate"):
-			tic_rate = config_data.set_value("network", "tic_rate", 10)
+	if not config_data.has_section_key("network", "tic_rate"):
+		config_data.set_value("network", "tic_rate", 10)
+		config_changes += 1
 	
-		if not config_data.has_section_key("network", "max_players"):
-			max_players = config_data.set_value("network", "max_players", 16)
+	if not config_data.has_section_key("network", "max_players"):
+		config_data.set_value("network", "max_players", 16)
+		config_changes += 1
 	
-		if not config_data.has_section_key("network", "start_level"):
-			start_level = config_data.set_value("network", "start_level", "Entry Level")
+	if not config_data.has_section_key("network", "start_level"):
+		config_data.set_value("network", "start_level", "Entry Level")
+		config_changes += 1
 			
-		if not config_data.has_section_key("network", "rcon_pass"):
-			if debug_mode:
-				print("Generating rcon_pass.")
-			rcon_pass = config_data.set_value("network", "rcon_pass", generate_random_string(16))
+	if not config_data.has_section_key("network", "rcon_pass"):
+		if debug_mode:
+			print("Generating rcon_pass.")
+		config_data.set_value("network", "rcon_pass", generate_random_string(16))
+		config_changes += 1
 		
-		if not config_data.has_section_key("network", "ip_address"):
-			ip_address = config_data.set_value("network", "ip_address", "0.0.0.0")
-		
-		#	May not want to set encryption key on load, server data will be encrypted with it so any random changes to this
-		#could result in data loss due to loss of generated key, perhaps it should be stored in a file somewhere in the 
-		#server's DIR, we'll have too see I guess, works for now so w/e.
-		if not config_data.has_section_key("network", "server_encryption_key"):
-			if debug_mode:
-				print("Generating server_encryption_key.")
-			server_encryption_key = config_data.set_value("network", "server_encryption_key", generate_random_string(32))
+	if not config_data.has_section_key("network", "ip_address"):
+		config_data.set_value("network", "ip_address", "0.0.0.0")
+		config_changes += 1
+
+		# Encryption
+	if not config_data.has_section_key("encryption", "enabled"):
+		config_data.set_value("encryption", "enabled", false)
+		config_changes += 1
+
+	if config_data.get_value("encryption","enabled"):
+		if not encryption_key_config.has_section_key("encryption", "encryption_key") or encryption_key_config.get_value("encryption","encryption_key") == "":
+			print("Encryption key enabled, but a key was not found, Generating one")
+			encryption_key_config.set_value("encryption","encryption_key",generate_random_string(32))
+			config_changes += 1
+
+		if not config_data.has_section_key("encryption", "encrypt_world"):
+			config_data.set_value("encryption", "encrypt_world", false)
+			config_changes += 1
+
+		if not config_data.has_section_key("encryption", "encrypt_players"):
+			config_data.set_value("encryption", "encrypt_players", false)
+			config_changes += 1
+
+	if config_changes > 0: 
+		print("Preformed ", config_changes, " changed to Config, Saving Changes.")
+		save_settings_config()
 
 #Load config file
 func load_settings_config():
-	if config_data.load(settings_config_path) == OK:
-		if config_data.has_section("network"):
-			for entry in config_data.get_section_keys("network"):
-				var entryval = config_data.get_value("network", entry)
-				match entry:
-					"tic_rate":
-						print("TIC RATE: ", entryval)
-						tic_rate = entryval
-					"port":
-						print("PORT: ", entryval)
-						port = entryval
-					"max_players":
-						print("MAX PLAYERS: ", entryval)
-						max_players = entryval
-					"start_level":
-						print("START LEVEL: ", quote(entryval))
-						start_level = entryval
-					"rcon_pass":
-						print("RCON PASS IS SET")
-						rcon_pass = entryval
-					"ip_address":
-						print("IPADDRESS: ", entryval)
-						ip_address = entryval
-					"server_encryption_key":
-						print("SERVER ENCRYPTION KEY SET")
-						server_encryption_key = entryval
-		else:
-			print("invalid Config, Attempting Repair...")
-			reload_settings()
-	else:
-		# We should really panic and kill it here, but meh, let it try and fix it anyway.
-		# - Phoenix
-		# Might be right, though what if the config folder/files are missing? Might not be a fequent concern but never know.
-		# - Nac
-		reload_settings()
+	config_data.load(settings_config_path)
+	encryption_key_config.load(encryption_key_path)
+
+	# Lets add any settings that dont exist
+	load_missing_settings()
+
+	for section in config_data.get_sections():
+		if debug_mode:
+			print("[",section, "]")
+		for entry in config_data.get_section_keys(section):
+			var entry_val = config_data.get_value(section,entry)
+			if debug_mode:
+				print(entry, ":",entry_val)
+
 
 func reload_settings():
 	if freshStart == false:
@@ -172,6 +197,9 @@ func quote(string):
 func get_port():
 	return port
 
+func get_debugMode():
+	return debug_mode
+
 #Get max players
 func get_player_max():
 	return max_players
@@ -179,6 +207,9 @@ func get_player_max():
 #Get server IP
 func get_ip_address():
 	return ip_address
+
+func get_encryption_status():
+	return encryption_status
 
 #Get ticrate
 func get_tic():

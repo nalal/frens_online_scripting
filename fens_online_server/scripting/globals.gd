@@ -6,9 +6,8 @@ const CUSTOM_PATH = "custom"
 const DATA_PATH = "data"
 
 #This is a concat with another path so must be a var
-# Shouldn't These be getting saved as configs and not custom? - Phoenix
-onready var settings_config_path = CUSTOM_PATH + "/settings.ini"
-onready var encryption_key_path = CUSTOM_PATH + "/encryption_key.ini"
+onready var settings_config_path = CONFIGS_PATH + "/settings.ini"
+onready var encryption_key_path = CONFIGS_PATH + "/encryption_key.ini"
 
 onready var server_encryption_key
 onready var config_data = ConfigFile.new()
@@ -81,7 +80,7 @@ func check_filesystem(path):
 #Save config data to config file
 func save_settings_config():
 	config_data.save(settings_config_path)
-	if encryption_enabled:
+	if config_data.get_value("encryption", "enabled"):
 		encryption_key_config.save(encryption_key_path)
 
 #Parse settings and load any missing as default 

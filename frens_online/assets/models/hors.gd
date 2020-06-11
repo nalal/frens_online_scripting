@@ -57,7 +57,11 @@ func get_part_color(part):
 	var color
 	for bp in body_parts[part]:
 		var change_part = get_node(bp)
-		var mesh = change_part.get_mesh().surface_get_material(0)
+		var mesh = change_part.get_material_override()
+		vari = mesh
+		if mesh == null:
+			mesh = change_part.get_mesh().surface_get_material(0)
+
 		color = mesh.get_albedo()
 	return color
 

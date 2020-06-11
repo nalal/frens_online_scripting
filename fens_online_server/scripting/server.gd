@@ -213,6 +213,9 @@ func send_connected_players(id):
 	for p in player_list.get_children():
 		if p.get_p_id() != 1:
 			rpc_id(id, "load_player", p.get_p_id(), p.get_p_name().to_ascii(), p.get_player_pos())
+			for n in get_player_node(p.get_p_id()).get_model_data():
+				for set in n["settings"]:
+					rpc_id(id, "update_model", set, p.get_p_id())
 	pass
 
 #send move velocity data
@@ -249,6 +252,8 @@ func get_id_from_name(p_name):
 
 master func send_model_data(model_data):
 	print("Sending model data for '" + str(get_tree().get_rpc_sender_id()) + "'")
+	var player_to_model = get_player_node(get_tree().get_rpc_sender_id())
+	player_to_model.add_model_data(model_data)
 	rpc("update_model", model_data, get_tree().get_rpc_sender_id())
 
 #remove player from the game

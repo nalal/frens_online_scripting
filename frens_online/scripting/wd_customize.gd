@@ -197,8 +197,9 @@ func _on_b_save_name_pressed():
 
 func load_template(template):
 	for t in template["settings"]:
-		globals.get_networking_node().send_player_model_data(t)
+		#globals.get_networking_node().send_player_model_data(t)
 		for a in t["asset_flags"]:
+			print(str(t))
 			match a:
 				enums.M_ASSET_FLAGS.COLOR:
 					loaded_model.set_part_color(t["asset_id"], t["asset_color"])

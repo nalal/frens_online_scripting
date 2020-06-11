@@ -8,6 +8,8 @@ onready var player_pos
 onready var player_id
 #player role
 onready var player_role
+#player model data
+onready var player_model = []
 
 func _ready():
 	pass
@@ -17,6 +19,15 @@ func get_p_name():
 
 func set_p_name(set_name):
 	player_name = set_name
+
+func add_model_data(model_data):
+	player_model.push_back(model_data)
+
+func reset_model_data():
+	player_model = []
+
+func get_model_data():
+	return player_model
 
 func set_client_name(set_name):
 	get_node(".").set_name(set_name)

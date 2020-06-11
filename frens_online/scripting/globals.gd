@@ -33,12 +33,13 @@ var entry_level_id
 var model_list = []
 
 func _ready():
+	print("\n[==LOADING GLOBALS AND RUNNING STARTUP CHECKS==]")
 	check_all_filesystems()
 	load_configs()
 	load_models()
 
 func load_models():
-	print("Loading models.")
+	print("\n[==LOADING BASE MODELS==]")
 	var horse_model = {
 		"name":"Horse",
 		"id":"hors",

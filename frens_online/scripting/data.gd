@@ -1,9 +1,11 @@
 extends Node
 
+const CUSTOM_CONTENT = "custom_content/"
 const DATA_DIR = "data/"
 const MODEL_DIR = "models/"
 
 func _ready():
+	print("\n[==VERIFYING DIRECTORIES==]")
 	verify_paths()
 	pass
 
@@ -14,6 +16,13 @@ var model_data_obj = {
 
 func verify_paths():
 	var dir = Directory.new()
+	match dir.dir_exists(CUSTOM_CONTENT):
+		true:
+			print("Custom content folder found")
+		false:
+			print("Custom content folder not found, rebuilding")
+			dir.open(".")
+			dir.make_dir(CUSTOM_CONTENT)
 	match dir.dir_exists(DATA_DIR):
 		true:
 			print("Data directory located.")

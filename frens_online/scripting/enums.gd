@@ -7,4 +7,5 @@ enum M_ASSET_FLAGS {COLOR, TOGGLE, SELECTION}
 
 
 func _ready():
+	print("\n[==GLOBAL ENUMS LOADED==]")
 	pass

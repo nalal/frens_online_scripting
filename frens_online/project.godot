@@ -27,9 +27,9 @@ signals="*res://scripting/signals.gd"
 gameinit="*res://scripting/game_init.gd"
 globals="*res://scripting/globals.gd"
 level="*res://scripting/level_handler.tscn"
-custom_content="*res://scripting/custom_content.gd"
 enums="*res://scripting/enums.gd"
 data="*res://scripting/data.gd"
+custom_content="*res://scripting/custom_content.gd"
 
 [display]
 

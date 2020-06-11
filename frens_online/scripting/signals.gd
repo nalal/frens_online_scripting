@@ -8,7 +8,7 @@ signal load_complete
 signal load_models
 
 func _ready():
-	print("Signal handler started")
+	print("\n[==SIGNAL HANDLER STARTED==]")
 
 func load_models():
 	print("Signaling for models to load.")

@@ -1,6 +1,7 @@
 extends Node
 
 func _ready():
+	print("\n[==INITIALIZING GAME DATA==]")
 	#add_base_levels()
 	signals.game_start()
 	signals.connect_node_to_signal(get_path(), "level_handler_loaded","add_base_levels")

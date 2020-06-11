@@ -25,7 +25,7 @@ class synced_obj:
 	var o_type
 
 func _ready():
-	print("Level entity handler loaded")
+	print("\n[==LEVEL HANDLER STARTED==]")
 	signals.level_handler_loaded()
 
 #get level from level list by name

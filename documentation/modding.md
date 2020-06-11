@@ -1,5 +1,7 @@
 # MODDING GUIDE
 
+YES I KNOW THE IMAGES ARE BORKED I'LL FIX IT LATER
+
 ## Creating a mod
 
 To create a new mod, navigate to the `mods` folder in the project and 

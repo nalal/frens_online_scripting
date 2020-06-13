@@ -28,6 +28,8 @@ var is_kicked = false
 #internal level IDs
 var nacs_test_level_id
 var entry_level_id
+var orange_level_id
+var fol_world_id
 
 #model list
 var model_list = []

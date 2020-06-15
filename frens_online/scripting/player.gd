@@ -40,6 +40,7 @@ var obj_is_held = false
 
 var can_attach = true
 
+var force_fp = false
 
 #chat lock
 onready var is_player_chatting = false
@@ -63,6 +64,8 @@ onready var pause_menu = $pause_menu
 onready var p_cam_lens = $player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/tp_cam
 onready var p_cam_r = $player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/tp_cam/r_cam
 onready var throw_point = $player_collide/throw_point
+onready var p_close_cam_area = $player_collide/cam_rotate/head/cam_zoom/p_close_cam_area
+onready var fp_cam = $player_collide/cam_rotate/head/cam_zoom/cam_move/fp_cam
 export onready var default_model = load("res://assets/models/hors.tscn")
 var render_dist
 
@@ -82,9 +85,17 @@ func _ready():
 	h_p_info.set_player_hud_name(p_name)
 	h_p_info.set_version_text(g_version)
 	p_ray_f.add_exception(p_name_box)
+	p_ray_f.add_exception(p_close_cam_area)
 	p_cam_lens.set_zfar(globals.get_render_distance())
+	fp_cam.set_zfar(globals.get_render_distance())
 	player_model = p_collide.get_node("hors")
-	set_fog_vals()
+	var move = player_model.get_translation()
+	move.y = move.y + -1.0
+	player_model.set_translation(move)
+	
+	set_scale(globals.get_p_scale())
+	set_fog_vals(p_cam_lens.get_environment())
+	set_fog_vals(fp_cam.get_environment())
 
 func set_player_color(part, color):
 	player_model.set_part_color(part, color)
@@ -92,8 +103,7 @@ func set_player_color(part, color):
 func set_player_visibility(part, vis):
 	player_model.set_part_visibility(part, vis)
 
-func set_fog_vals():
-	var env = p_cam_lens.get_environment()
+func set_fog_vals(env):
 	env.set_fog_enabled(true)
 	env.set_fog_color("#a6a8aa")
 	env.set_fog_depth_begin(globals.get_render_distance() - 50)
@@ -129,8 +139,10 @@ func _input(event):
 			elif Input.is_action_pressed("move_free_cam_press") && !p_move_manual:
 				p_cam_manual = true
 		else:
+			if !p_cam_lock:
+				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			p_cam_manual = false
-			p_move_manual =false
+			p_move_manual = false
 	if !is_player_chatting:
 		#rotate character and camera
 		if event is InputEventMouseMotion && (p_move_manual || p_cam_lock):
@@ -226,6 +238,14 @@ func send_message(message):
 
 #per physics frame check
 func _physics_process(delta):
+	if p_close_cam_area.get_overlapping_areas().size() > 1:
+		force_fp = true
+	else:
+		force_fp = false
+	if force_fp && !fp_cam.is_current():
+		fp_cam.make_current()
+	elif !force_fp && fp_cam.is_current():
+		p_cam_lens.make_current()
 	var head_base = p_collide.get_global_transform().basis
 	var direction = Vector3()
 	if !is_player_chatting:

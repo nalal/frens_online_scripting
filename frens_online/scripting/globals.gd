@@ -25,6 +25,9 @@ onready var render_distance = 100
 var kick_message
 var is_kicked = false
 
+#global player scale
+var p_scale = Vector3()
+
 #internal level IDs
 var nacs_test_level_id
 var entry_level_id
@@ -39,6 +42,12 @@ func _ready():
 	check_all_filesystems()
 	load_configs()
 	load_models()
+
+func set_p_scale(scale):
+	p_scale = scale
+
+func get_p_scale():
+	return p_scale
 
 func load_models():
 	print("\n[==LOADING BASE MODELS==]")

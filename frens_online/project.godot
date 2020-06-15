@@ -40,7 +40,7 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "zylann.hterrain" )
+enabled=PoolStringArray(  )
 
 [input]
 

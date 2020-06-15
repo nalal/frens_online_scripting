@@ -11,7 +11,7 @@ func add_base_levels():
 	globals.nacs_test_level_id = add_level("Nac's Test Room", "res://levels/nacs_test_room.tscn")
 	globals.entry_level_id = add_level("Entry Level", "res://levels/fol_entry_level.tscn")
 	globals.orange_level_id = add_level("Terrible Deathmatch Map", "res://levels/fol_orange.tscn")
-	globals.fol_world_id = add_level("The Island", "res://levels/fol_world.tscn")
+	globals.fol_world_id = add_level("The Club", "res://levels/fol_world.tscn")
 
 func add_level(level_name, level_path):
 	var level_to_add = level.level_data_object.new()

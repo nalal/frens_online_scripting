@@ -1,15 +1,13 @@
-[gd_resource type="SpatialMaterial" load_steps=5 format=2]
+[gd_resource type="SpatialMaterial" load_steps=3 format=2]
 
-[ext_resource path="tile_0_orm.png" type="Texture" id=2]
-[ext_resource path="tile_0_normal.png" type="Texture" id=3]
+[ext_resource path="res://assets/textures/tile_0_orm.png" type="Texture" id=2]
+[ext_resource path="res://assets/textures/tile_0_normal.png" type="Texture" id=3]
 
 [resource]
-albedo_color = Color(1, 1, 1, 1)
 metallic = 0.27
-roughness = 1
 roughness_texture = ExtResource( 2 )
 roughness_texture_channel = 1
 normal_enabled = true
-normal_scale = 10
+normal_scale = 10.0
 normal_texture = ExtResource( 3 )
-
+uv1_triplanar = true

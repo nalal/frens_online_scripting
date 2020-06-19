@@ -21,18 +21,19 @@ func _ready():
 
 #on physics tic process cam move 
 func _physics_process(delta):
-	var cam_base = get_global_transform().basis
-	var direction = Vector3()
-	#if camera must move, do it
-	if cam_must_move() && !p_cam_hitbox.overlaps_area(p_close_cam_area):
-		print("Cam Must Move")
-		direction += cam_base.z
-	#if camera must reset, do it
-	elif cam_must_reset():
-		print("Cam Must Reset")
-		direction -= cam_base.z
-	#actually move camera
-	move_and_slide(direction * 35)
+	if !globals.using_fp:
+		var cam_base = get_global_transform().basis
+		var direction = Vector3()
+		#if camera must move, do it
+		if cam_must_move() && !p_cam_hitbox.overlaps_area(p_close_cam_area):
+			print("Cam Must Move")
+			direction += cam_base.z
+		#if camera must reset, do it
+		elif cam_must_reset():
+			print("Cam Must Reset")
+			direction -= cam_base.z
+		#actually move camera
+		move_and_slide(direction * 35)
 
 #check if cam must move
 func cam_must_move():

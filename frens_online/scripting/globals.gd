@@ -21,6 +21,8 @@ const release_build = "CLOSED ALPHA "
 onready var current_level
 onready var render_distance = 100
 
+var using_fp = false
+
 #kick handler
 var kick_message
 var is_kicked = false

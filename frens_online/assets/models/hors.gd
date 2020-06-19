@@ -22,6 +22,9 @@ func _ready():
 	asset_to_add.asset_flags.push_back(enums.M_ASSET_FLAGS.COLOR)
 	asset_to_add.asset_flags.push_back(enums.M_ASSET_FLAGS.TOGGLE)
 	add_asset(asset_to_add)
+	var move = get_translation()
+	move.y = move.y + -1.0
+	set_translation(move)
 
 func get_parts():
 	return body_parts

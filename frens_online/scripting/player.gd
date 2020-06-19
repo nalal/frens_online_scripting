@@ -18,9 +18,9 @@ var cam_obj_x = 0
 #player move speed
 var speed = 30
 #player acceleration rate
-var acceleration = 5
+var acceleration = 6
 #player gravity
-var gravity = 1
+var gravity = 5
 #speed of player jump/fly up
 var p_jump_speed = 100
 #is player flying
@@ -41,6 +41,7 @@ var obj_is_held = false
 var can_attach = true
 
 var force_fp = false
+var manual_fp = false
 
 #chat lock
 onready var is_player_chatting = false
@@ -88,11 +89,6 @@ func _ready():
 	p_ray_f.add_exception(p_close_cam_area)
 	p_cam_lens.set_zfar(globals.get_render_distance())
 	fp_cam.set_zfar(globals.get_render_distance())
-	player_model = p_collide.get_node("hors")
-	var move = player_model.get_translation()
-	move.y = move.y + -1.0
-	player_model.set_translation(move)
-	
 	set_scale(globals.get_p_scale())
 	set_fog_vals(p_cam_lens.get_environment())
 	set_fog_vals(fp_cam.get_environment())
@@ -181,6 +177,14 @@ func _input(event):
 				true:
 					throw_obj()
 					obj_is_held = false
+		if Input.is_action_just_pressed("cam_perspective_toggle"):
+			match manual_fp:
+				false:
+					manual_fp = true
+					globals.using_fp = true
+				true:
+					manual_fp = false
+					globals.using_fp = false
 	if Input.is_action_just_pressed("chat_enter"):
 		if !is_player_chatting:
 			h_chat_message.set_editable(true)
@@ -238,14 +242,19 @@ func send_message(message):
 
 #per physics frame check
 func _physics_process(delta):
-	if p_close_cam_area.get_overlapping_areas().size() > 1:
-		force_fp = true
-	else:
-		force_fp = false
-	if force_fp && !fp_cam.is_current():
-		fp_cam.make_current()
-	elif !force_fp && fp_cam.is_current():
-		p_cam_lens.make_current()
+	match manual_fp:
+		true:
+			if !fp_cam.is_current():
+				fp_cam.make_current()
+		false:
+			if p_close_cam_area.get_overlapping_areas().size() > 1:
+				force_fp = true
+			else:
+				force_fp = false
+			if force_fp && !fp_cam.is_current():
+				fp_cam.make_current()
+			elif !force_fp && fp_cam.is_current():
+				p_cam_lens.make_current()
 	var head_base = p_collide.get_global_transform().basis
 	var direction = Vector3()
 	if !is_player_chatting:

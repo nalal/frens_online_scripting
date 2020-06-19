@@ -63,7 +63,6 @@ func init_conn_handler():
 		_peer_connected(1)
 	else:
 		print("IP Address ", globals.quote(globals.get_ip_address()), " is not a valid IP Address.")
-		
 
 #when peer connects, do this
 #[id] = ID of peer connected
@@ -85,7 +84,6 @@ func _peer_connected(id):
 	#if master was added, add name to user node
 	if m_name != "":
 		_name_recieved(m_name.to_ascii())
-
 
 #When user disconnects, remove entity
 #[id] = ID of peer to remove (int)
@@ -148,6 +146,11 @@ func check_name(peer_name):
 	]
 	for n in invalid_names:
 		if n == peer_name.to_upper():
+			return false
+	var player_list = get_node("./players/")
+	for p in player_list.get_children():
+		if peer_name == p.get_p_name():
+			print("Player '" + peer_name + "' is already connected, dropping new connection.")
 			return false
 	return peer_name.is_valid_filename()
 

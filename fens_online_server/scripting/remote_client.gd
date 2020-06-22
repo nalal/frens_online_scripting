@@ -11,6 +11,13 @@ onready var player_role
 #player model data
 onready var player_model = []
 
+var movement = {
+	"moving_forward":false,
+	"moving_back":false,
+	"moving_left":false,
+	"moving_right":false
+}
+
 func _ready():
 	pass
 

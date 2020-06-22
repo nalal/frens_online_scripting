@@ -15,6 +15,12 @@ var acceleration = 5
 #puppet gravity
 var gravity = 5
 
+#movement tracking
+var moving_forward = false
+var moving_back = false
+var moving_left = false
+var moving_right = false
+
 #player entity variables
 onready var pu_name_render = get_node("name_box")
 onready var pu_collide = $player_collide
@@ -37,6 +43,23 @@ func _ready():
 
 #per physics frame check
 func _physics_process(delta):
+	var head_base = pu_collide.get_global_transform().basis
+	var direction = Vector3()
+	#strafe movement, check to see if player is already strafing
+	if !moving_left || !moving_right:
+		if moving_left:
+			direction += head_base.x
+		elif moving_right:
+			direction -= head_base.x
+	#forward/backward movement, check to see if player is already moving
+	if !moving_back || !moving_forward:
+		if moving_back:
+			direction -= head_base.z
+		elif moving_forward:
+			direction += head_base.z
+	direction = direction.normalized()
+	p_velocity = p_velocity.linear_interpolate(direction * speed, acceleration * delta)
+	p_velocity = move_and_slide(p_velocity)
 	pass
 
 #set puppet node name from ID, why set_name? becuase I'm lazy and copied the code from set name in player

@@ -12,6 +12,7 @@ onready var g_pass
 onready var server_ip = "192.168.1.210"
 onready var server_port = 25565
 onready var connected_to_server = false
+onready var online_mode = false
 onready var networking
 onready var game_ver_major = 0
 onready var game_ver_minor = 0

@@ -149,12 +149,20 @@ puppet func message_recieved(id, data):
 	var player = get_node("/root/game/level_buffer/Level/player")
 	player.load_message(message)
 
-puppet func move_player(move_slide_val, id):
+puppet func move_player(move_type, move_val, id):
 	match id:
 		local_id:
 			return
 	var puppet_to_update = get_puppet(id)
-	puppet_to_update.puppet_setpos(move_slide_val)
+	match move_type:
+		enums.MOVE_TYPE.FORWARD:
+			puppet_to_update.moving_forward = move_val
+		enums.MOVE_TYPE.BACKWARD:
+			puppet_to_update.moving_back = move_val
+		enums.MOVE_TYPE.LEFT:
+			puppet_to_update.moving_left = move_val
+		enums.MOVE_TYPE.RIGHT:
+			puppet_to_update.moving_right = move_val
 
 func sync_obj(obj):
 	send_packet(obj, OBJ_PACKET)
@@ -262,8 +270,9 @@ puppet func update_player_pos(arg):
 	var player_pos_send = get_node("/root/game/level_buffer/Level/player").get_player_gpos()
 	send_packet(player_pos_send,POS_PACKET)
 
-func send_player_move(arg):
-	send_packet(arg, MOVE_PACKET)
+func send_player_move(move_type, move_val):
+	var move_packet = [move_type, move_val]
+	send_packet(move_packet, MOVE_PACKET)
 
 func send_player_model_data(model_data):
 	send_packet(model_data, PLAYER_MODEL_DATA_PACKET)

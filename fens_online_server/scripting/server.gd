@@ -146,17 +146,22 @@ func check_name(peer_name):
 	]
 	for n in invalid_names:
 		if n == peer_name.to_upper():
+			rpc_id(get_tree().get_rpc_sender_id(), "kick_msg", "Invalid name.")
 			return false
 	var player_list = get_node("./players/")
 	for p in player_list.get_children():
 		if peer_name == p.get_p_name():
 			print("Player '" + peer_name + "' is already connected, dropping new connection.")
+			rpc_id(get_tree().get_rpc_sender_id(), "kick_msg", "Username already connected.")
 			return false
 	return peer_name.is_valid_filename()
 
 #remote call for sending new player name to server
 #[data] = name received (ASCII)
 master func _name_recieved(data):
+	if globals.max_players == name_id_list.size():
+		rpc_id(get_tree().get_rpc_sender_id(), "kick_msg", "Server is full.")
+		kick_player(get_tree().get_rpc_sender_id())
 	var peer_name = data.get_string_from_ascii()
 	peer_name = peer_name.strip_escapes()
 	var name_valid = check_name(peer_name)
@@ -223,8 +228,8 @@ func send_connected_players(id):
 
 #send move velocity data
 #[move_slide_val] = value to move and slide by (Vector3)
-master func send_move(move_slide_val):
-	rpc("move_player", move_slide_val, get_tree().get_rpc_sender_id())
+master func send_move(move_packet):
+	rpc("move_player", move_packet[0], move_packet[1], get_tree().get_rpc_sender_id())
 
 #send animation player to clients
 #[anim] = animation to play (string)

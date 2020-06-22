@@ -196,6 +196,14 @@ func _input(event):
 			var message = h_chat_message.text
 			h_chat_message.text = ""
 			send_message(message)
+	if Input.is_action_just_released("move_left"):
+		game.send_player_move(enums.MOVE_TYPE.LEFT, false)
+	if Input.is_action_just_released("move_right"):
+		game.send_player_move(enums.MOVE_TYPE.RIGHT, false)
+	if Input.is_action_just_released("move_back"):
+		game.send_player_move(enums.MOVE_TYPE.BACKWARD, false)
+	if Input.is_action_just_released("move_forward"):
+		game.send_player_move(enums.MOVE_TYPE.FORWARD, false)
 
 #attach object to player
 func attach_obj(obj):
@@ -261,14 +269,18 @@ func _physics_process(delta):
 		#strafe movement, check to see if player is already strafing
 		if !Input.is_action_pressed("move_left") || !Input.is_action_pressed("move_right"):
 			if Input.is_action_pressed("move_left"):
+				game.send_player_move(enums.MOVE_TYPE.LEFT, true)
 				direction += head_base.x
 			elif Input.is_action_pressed("move_right"):
+				game.send_player_move(enums.MOVE_TYPE.RIGHT, true)
 				direction -= head_base.x
 		#forward/backward movement, check to see if player is already moving
 		if !Input.is_action_pressed("move_back") || !Input.is_action_pressed("move_forward"):
 			if Input.is_action_pressed("move_back"):
+				game.send_player_move(enums.MOVE_TYPE.BACKWARD, true)
 				direction -= head_base.z
 			elif Input.is_action_pressed("move_forward"):
+				game.send_player_move(enums.MOVE_TYPE.FORWARD, true)
 				direction += head_base.z
 		#toggle flying
 		if Input.is_action_just_pressed("move_fly"):
@@ -276,7 +288,6 @@ func _physics_process(delta):
 		direction = direction.normalized()
 		p_velocity = p_velocity.linear_interpolate(direction * speed, acceleration * delta)
 		#catch rotation input, done here to make cam movement more smooth
-
 		#jump command, checks for flying, if flying does not apply gravity
 		if !p_flying:
 			if Input.is_action_just_pressed("move_jump") && p_jump_area.get_overlapping_bodies().size() > 0:
@@ -292,7 +303,7 @@ func _physics_process(delta):
 		if !p_cam_lock && !p_cam_manual && !p_move_manual:
 				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		p_velocity = move_and_slide(p_velocity)
-		game.send_player_move(p_velocity)
+		#game.send_player_move(p_velocity)
 
 #set player name for entity
 #[name_in] = player entity name

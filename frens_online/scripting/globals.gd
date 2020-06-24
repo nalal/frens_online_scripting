@@ -15,7 +15,7 @@ onready var connected_to_server = false
 onready var online_mode = false
 onready var networking
 onready var game_ver_major = 0
-onready var game_ver_minor = 0
+onready var game_ver_minor = 1
 onready var game_ver_patch = 0
 #onready var game_ver = "v0.0.1"
 const release_build = "CLOSED ALPHA "

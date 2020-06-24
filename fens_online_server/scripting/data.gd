@@ -7,6 +7,7 @@ onready var server_data
 const ENCRYPTION_KEY = "CqQG38SBzbRwxwnxD7RNUrxkCZmwCsWj"
 
 func _ready():
+	print("\n[==FILE IO HANDLER STARTED==]")
 	pass
 
 
@@ -25,13 +26,21 @@ func create_server_data():
 	var f = File.new()
 	var err
 	print("Creating server data.")
-	f.open_encrypted_with_pass(globals.DATA_PATH + "/SERVER.fos", File.WRITE, globals.server_encryption_key)
+	f.open(globals.DATA_PATH + "/SERVER.fos", File.WRITE)
+	f.store_var()
+	f.close()
+
+func add_server_data(data_add):
+	var f = File.new()
+	var err
+	print("Creating server data.")
+	f.open(globals.DATA_PATH + "/SERVER.fos", File.WRITE)
 	f.store_var()
 	f.close()
 
 func test_server_data():
 	var f = File.new()
-	var err = f.open_encrypted_with_pass(globals.DATA_PATH + "/SERVER.fos", File.READ, globals.server_encryption_key)
+	var err = f.open(globals.DATA_PATH + "/SERVER.fos", File.READ)
 	match err:
 		ERR_FILE_CORRUPT:
 			print("Server data could not be loaded, regenerating.")
@@ -41,13 +50,15 @@ func test_server_data():
 
 func load_server_data():
 	var f = File.new()
-	var err = f.open_encrypted_with_pass(globals.DATA_PATH + "/SERVER.fos", File.READ, globals.server_encryption_key)
+	var err = f.open(globals.DATA_PATH + "/SERVER.fos", File.READ)
 	match err:
 		ERR_FILE_CORRUPT:
 			print("Server data could not be loaded.")
 			f.close()
 			return ERR_FILE_CORRUPT
-	return err
+	var serv_data = f.get_var()
+	f.close()
+	return serv_data
 
 #check if player data exists, load if does, create if not
 #[uname] = username (string)

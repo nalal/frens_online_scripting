@@ -64,7 +64,7 @@ func load_models():
 		"id":"bloxhors_rigged",
 		"path":"res://assets/models/bloxhors/bloxhors_rigged.tscn"
 	}
-	add_model_to_list(horse_model)
+	#add_model_to_list(horse_model)
 	add_model_to_list(n_horse_model)
 	print("Signaling for custom models.")
 	signals.load_models()

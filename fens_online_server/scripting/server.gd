@@ -2,6 +2,8 @@ extends Node
 
 onready var tic_timer = $tic_timer
 
+#banned players
+var banlist = []
 #position update array
 var pos_update = []
 #player list
@@ -43,6 +45,7 @@ master func update_obj_pos(obj):
 
 #start server process
 func init_conn_handler():
+	print("\n[==NETWORK SERVICE STARTING==]")
 	var network = NetworkedMultiplayerENet.new()
 	if globals.get_ip_address().is_valid_ip_address():
 		network.set_bind_ip(globals.get_ip_address())
@@ -56,13 +59,14 @@ func init_conn_handler():
 			print("Encryption is Enabled.")
 		else:
 			print("Encryption is Disabled.")
-		
 		print("Listening on ", globals.get_ip_address(),":",globals.get_port())
 		print("Server ID is '" + str(get_tree().get_network_unique_id()) + "'")
 		#add master to list of users connected
+		print("\n[==NETWORK SERVICE RUNNING, ALL SYSTEMS NOMINAL==]")
 		_peer_connected(1)
 	else:
 		print("IP Address ", globals.quote(globals.get_ip_address()), " is not a valid IP Address.")
+		print("\n[==NETWORK SERVICE FAILED TO START, CHECK CONFIG==]")
 
 #when peer connects, do this
 #[id] = ID of peer connected
@@ -344,6 +348,10 @@ master func command_send(command):
 			if com_parts.size() > 1 && check_role(sender, enums.ROLES.MOD):
 				kick_command(sender, com_parts[1])
 			return
+		"/ban":
+			if com_parts.size() > 1 && check_role(sender, enums.ROLES.MOD):
+				ban_command(sender, com_parts[1])
+			return
 		#list players command (/playerlist)
 		"/playerlist":
 			print_ids(sender)
@@ -358,6 +366,27 @@ master func obj_throw(obj_id):
 
 remote func recieve_throw_obj(throw_val):
 	print("Player '" + str(get_tree().get_rpc_sender_id()) + "' threw object with val '" + str(throw_val) + "'")
+
+func ban_command(sender, kick_id):
+	var targ_id = get_id_from_name(kick_id)
+	if !targ_id:
+		if !kick_id.is_valid_integer():
+			sys_message(sender, "INVALID PLAYER ID/NAME")
+		else:
+			if is_player_connected(int(kick_id)):
+				if compare_id_roles(sender, int(kick_id)):
+					rpc_id(kick_id, "kick_msg", "You have been banned.")
+					kick_player(int(kick_id))
+				else:
+					sys_message(sender, "YOU DO NOT HAVE THE AUTHORITY TO BAN THIS PLAYER")
+			else:
+				sys_message(sender, "INVALID PLAYER ID/NAME")
+	else:
+		if compare_id_roles(sender, targ_id):
+			rpc_id(kick_id, "kick_msg", "You have been banned.")
+			kick_player(targ_id)
+		else:
+			sys_message(sender, "YOU DO NOT HAVE THE AUTHORITY TO KICK THIS PLAYER")
 
 #kick player
 #[sender] = if of person to send kick command (int)

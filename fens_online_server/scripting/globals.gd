@@ -39,6 +39,7 @@ var encryption_key
 var encryption_status = false
 
 func _ready():
+	print("\n[==GLOBAL DATA HANDLER STARTED==]")
 	# Get a Randomized seed for RNG
 	randomize()
 	check_all_filesystems()

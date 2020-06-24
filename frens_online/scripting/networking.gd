@@ -87,6 +87,9 @@ func process_local_command(command):
 			add_child(custom_menu)
 			get_node(custom_menu.get_name()).show()
 			return
+		"!help":
+			var player = get_node("/root/game/level_buffer/Level/player")
+			player.load_message("!customize:\n    Load custom model templates.")
 	var player = get_node("/root/game/level_buffer/Level/player")
 	player.load_message("Invalid command '" + command + "'")
 
@@ -313,4 +316,4 @@ puppet func update_model(model_data, id):
 		local_id:
 			return
 	print(str(model_data))
-	get_puppet(id).set_puppet_model(model_data["settings"])
+	get_puppet(id).set_puppet_model([model_data])

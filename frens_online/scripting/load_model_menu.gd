@@ -45,7 +45,7 @@ func _on_b_load_pressed():
 			for t in temps["templates"]:
 				if t["template_name"] == selected_template:
 					for t_setting in t["settings"]:
-						globals.get_networking_node().send_player_model_data(t)
+						globals.get_networking_node().send_player_model_data(t_setting)
 						for a in t_setting["asset_flags"]:
 							match a:
 								enums.M_ASSET_FLAGS.COLOR:

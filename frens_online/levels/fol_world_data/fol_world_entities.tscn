@@ -1,0 +1,89 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://assets/textures/wood.tres" type="Material" id=1]
+
+[sub_resource type="CubeMesh" id=1]
+
+[sub_resource type="BoxShape" id=2]
+
+[sub_resource type="CubeMesh" id=7]
+material = ExtResource( 1 )
+
+[sub_resource type="CubeMesh" id=8]
+size = Vector3( 10, 2, 10 )
+
+[sub_resource type="BoxShape" id=28]
+extents = Vector3( 5, 1, 5 )
+
+[sub_resource type="CubeMesh" id=3]
+material = ExtResource( 1 )
+size = Vector3( 10, 2, 10 )
+
+[sub_resource type="CubeMesh" id=5]
+size = Vector3( 100, 2, 100 )
+
+[sub_resource type="BoxShape" id=35]
+extents = Vector3( 50, 1, 50 )
+
+[sub_resource type="CubeMesh" id=9]
+material = ExtResource( 1 )
+size = Vector3( 100, 2, 100 )
+
+[node name="lvl_objs" type="Spatial"]
+
+[node name="lvl_obj_sml" type="MeshInstance" parent="."]
+visible = false
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="lvl_obj_sml"]
+
+[node name="CollisionShape" type="CollisionShape" parent="lvl_obj_sml/StaticBody"]
+shape = SubResource( 2 )
+
+[node name="lvl_obj_sml_floor" type="MeshInstance" parent="."]
+mesh = SubResource( 7 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="lvl_obj_sml_floor"]
+
+[node name="CollisionShape" type="CollisionShape" parent="lvl_obj_sml_floor/StaticBody"]
+shape = SubResource( 2 )
+
+[node name="lvl_obj_mdm" type="MeshInstance" parent="."]
+visible = false
+mesh = SubResource( 8 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="lvl_obj_mdm"]
+
+[node name="CollisionShape" type="CollisionShape" parent="lvl_obj_mdm/StaticBody"]
+shape = SubResource( 28 )
+
+[node name="lvl_obj_mdm_floor" type="MeshInstance" parent="."]
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="lvl_obj_mdm_floor"]
+
+[node name="CollisionShape" type="CollisionShape" parent="lvl_obj_mdm_floor/StaticBody"]
+shape = SubResource( 28 )
+
+[node name="lvl_obj_lrg" type="MeshInstance" parent="."]
+visible = false
+mesh = SubResource( 5 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="lvl_obj_lrg"]
+
+[node name="CollisionShape" type="CollisionShape" parent="lvl_obj_lrg/StaticBody"]
+shape = SubResource( 35 )
+
+[node name="lvl_obj_lrg_floor" type="MeshInstance" parent="."]
+mesh = SubResource( 9 )
+material/0 = null
+
+[node name="StaticBody" type="StaticBody" parent="lvl_obj_lrg_floor"]
+
+[node name="CollisionShape" type="CollisionShape" parent="lvl_obj_lrg_floor/StaticBody"]
+shape = SubResource( 35 )

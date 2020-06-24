@@ -5,12 +5,15 @@ extends "res://scripting/player_model.gd"
 onready var anim_player = $AnimationPlayer
 onready var grab_point = $m_head/mouth_node
 
+export var vari = 0
+
 var body_parts = {
-	"Tail":"m_tail",
-	"Body":"m_body",
-	"Head":"m_head",
-	"Neck":"m_neck"
+	"Tail":["m_tail"],
+	"Body":["m_body"],
+	"Head":["m_head"],
+	"Neck":["m_neck"]
 }
+
 
 var tog_nodes = []
 
@@ -18,14 +21,53 @@ func _ready():
 	var asset_to_add = model_asset.new()
 	asset_to_add.asset_id = "Body"
 	asset_to_add.asset_flags.push_back(enums.M_ASSET_FLAGS.COLOR)
+	asset_to_add.asset_flags.push_back(enums.M_ASSET_FLAGS.TOGGLE)
 	add_asset(asset_to_add)
+	var move = get_translation()
+	move.y = move.y + -1.0
+	set_translation(move)
+
+func get_parts():
+	return body_parts
 
 func get_part(part):
 	return get_node(body_parts[part])
 
 func play_animation(anim):
-	anim_player.play("boop")
+	anim_player.play("Action")
 	pass
+
+func set_part_color(part, color):
+	for bp in body_parts[part]:
+		var change_part = get_node(bp)
+		var mesh = SpatialMaterial.new()
+		#change_part.get_mesh().surface_get_material(0)
+		#print(change_part.get_mesh().surface_get_material(0))
+		mesh.set_albedo(color)
+		change_part.material_override = mesh
+		#change_part.get_mesh().surface_set_material(0, mesh)
+
+func set_part_visibility(part, vis):
+	for bp in body_parts[part]:
+		var change_part = get_node(bp)
+		change_part.set_visible(vis)
+	return
+
+func get_part_visibility(part):
+	var is_visible = get_node((body_parts[part])[0]).is_visible()
+	return is_visible
+
+func get_part_color(part):
+	var color
+	for bp in body_parts[part]:
+		var change_part = get_node(bp)
+		var mesh = change_part.get_material_override()
+		vari = mesh
+		if mesh == null:
+			mesh = change_part.get_mesh().surface_get_material(0)
+
+		color = mesh.get_albedo()
+	return color
 
 func add_to_toggleable_nodes(model_node):
 	tog_nodes.push_back(model_node.node_id)

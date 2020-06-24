@@ -15,12 +15,19 @@ var acceleration = 5
 #puppet gravity
 var gravity = 5
 
+#movement tracking
+var moving_forward = false
+var moving_back = false
+var moving_left = false
+var moving_right = false
+
 #player entity variables
 onready var pu_name_render = get_node("name_box")
 onready var pu_collide = $player_collide
-onready var pu_model = $player_collide/player_model
+export onready var pu_model #= $player_collide/player_model
 onready var throw_point = $player_collide/throw_point
-onready var player_model = $player_collide/player_model
+export onready var player_model #= $player_collide/player_model
+export onready var default_model = load("res://assets/models/hors.tscn")
 onready var selected_obj
 
 #puppet init
@@ -29,10 +36,30 @@ func _ready():
 	print("Puppet '" + pu_name + "' loaded.")
 	print("Setting Puppet name on name box to '" + pu_name + "'")
 	pu_name_render.set_puppet_name(pu_name)
+	pu_collide.add_child(default_model.instance())
+	pu_model = get_node("player_collide/hors")
+	player_model = get_node("player_collide/hors")
 	#pu_model.set_scale(Vector3(0.5,0.5,0.5))
 
 #per physics frame check
 func _physics_process(delta):
+	var head_base = pu_collide.get_global_transform().basis
+	var direction = Vector3()
+	#strafe movement, check to see if player is already strafing
+	if !moving_left || !moving_right:
+		if moving_left:
+			direction += head_base.x
+		elif moving_right:
+			direction -= head_base.x
+	#forward/backward movement, check to see if player is already moving
+	if !moving_back || !moving_forward:
+		if moving_back:
+			direction -= head_base.z
+		elif moving_forward:
+			direction += head_base.z
+	direction = direction.normalized()
+	p_velocity = p_velocity.linear_interpolate(direction * speed, acceleration * delta)
+	p_velocity = move_and_slide(p_velocity)
 	pass
 
 #set puppet node name from ID, why set_name? becuase I'm lazy and copied the code from set name in player
@@ -94,3 +121,22 @@ func play_animation(anim):
 #delete puppet from scene
 func remove_puppet():
 	get_parent().remove_child(self)
+
+func set_puppet_model_id(model_id):
+	pu_collide.remove_child(pu_model)
+	player_model = model_id
+	var model
+	for m in globals.get_model_list():
+		if m["id"] == model_id:
+			model = load(m["path"]).instance()
+			pu_model = model
+			pu_collide.add_child(model)
+
+func set_puppet_model(model_data):
+	for s in model_data:
+		for af in s["asset_flags"]:
+			match af:
+				enums.M_ASSET_FLAGS.COLOR:
+					pu_model.set_part_color(s["asset_id"], s["asset_color"])
+				enums.M_ASSET_FLAGS.TOGGLE:
+					pu_model.set_part_visibility(s["asset_id"], s["asset_visible"])

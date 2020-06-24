@@ -5,13 +5,14 @@
 [node name="c_customizer" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_right = -1607.0
+margin_bottom = -574.0
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="wd_panel" type="WindowDialog" parent="."]
-visible = true
 margin_left = 50.0
 margin_top = 33.0
 margin_right = 363.0
@@ -29,12 +30,18 @@ __meta__ = {
 
 [node name="cp_ent_color" type="ColorPicker" parent="wd_panel/vbc_customizer"]
 visible = false
-margin_right = 313.0
-margin_bottom = 462.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 4.0
+margin_bottom = 4.0
 
 [node name="cb_ent_enabled" type="CheckButton" parent="wd_panel/vbc_customizer"]
-visible = false
 margin_right = 313.0
 margin_bottom = 40.0
+pressed = true
 text = "Visible"
+[connection signal="hide" from="." to="." method="_on_c_customizer_hide"]
+[connection signal="hide" from="wd_panel" to="." method="_on_wd_panel_hide"]
 [connection signal="color_changed" from="wd_panel/vbc_customizer/cp_ent_color" to="." method="_on_cp_ent_color_color_changed"]
+[connection signal="pressed" from="wd_panel/vbc_customizer/cb_ent_enabled" to="." method="_on_cb_ent_enabled_pressed"]
+[connection signal="toggled" from="wd_panel/vbc_customizer/cb_ent_enabled" to="." method="_on_cb_ent_enabled_toggled"]

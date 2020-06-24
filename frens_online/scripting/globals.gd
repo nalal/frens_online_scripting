@@ -12,38 +12,60 @@ onready var g_pass
 onready var server_ip = "192.168.1.210"
 onready var server_port = 25565
 onready var connected_to_server = false
+onready var online_mode = false
 onready var networking
 onready var game_ver_major = 0
 onready var game_ver_minor = 0
 onready var game_ver_patch = 0
 #onready var game_ver = "v0.0.1"
-onready var release_build = "CLOSED ALPHA "
+const release_build = "CLOSED ALPHA "
 onready var current_level
 onready var render_distance = 100
+
+var using_fp = false
 
 #kick handler
 var kick_message
 var is_kicked = false
 
+#global player scale
+var p_scale = Vector3()
+
 #internal level IDs
 var nacs_test_level_id
 var entry_level_id
+var orange_level_id
+var fol_world_id
 
 #model list
 var model_list = []
 
 func _ready():
+	print("\n[==LOADING GLOBALS AND RUNNING STARTUP CHECKS==]")
 	check_all_filesystems()
 	load_configs()
 	load_models()
 
+func set_p_scale(scale):
+	p_scale = scale
+
+func get_p_scale():
+	return p_scale
+
 func load_models():
-	print("Loading models.")
+	print("\n[==LOADING BASE MODELS==]")
 	var horse_model = {
 		"name":"Horse",
+		"id":"hors",
 		"path":"res://assets/models/hors.tscn"
 	}
-	add_model_to_list(horse_model)
+	var n_horse_model = {
+		"name":"New Horse",
+		"id":"bloxhors_rigged",
+		"path":"res://assets/models/bloxhors/bloxhors_rigged.tscn"
+	}
+	#add_model_to_list(horse_model)
+	add_model_to_list(n_horse_model)
 	print("Signaling for custom models.")
 	signals.load_models()
 

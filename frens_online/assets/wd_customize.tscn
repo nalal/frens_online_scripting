@@ -8,10 +8,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -391.0
-margin_top = -165.0
-margin_right = 268.0
-margin_bottom = 166.0
+margin_left = -329.5
+margin_top = -177.5
+margin_right = 329.5
+margin_bottom = 177.5
 window_title = "Model Customization"
 script = ExtResource( 1 )
 __meta__ = {
@@ -20,7 +20,7 @@ __meta__ = {
 
 [node name="vc_model_view" type="ViewportContainer" parent="."]
 margin_right = 381.0
-margin_bottom = 329.0
+margin_bottom = 355.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -34,8 +34,16 @@ render_target_update_mode = 3
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0160394, 0 )
 
 [node name="Camera" type="Camera" parent="vc_model_view/v_model_render/s_model_render_plane"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7964, 9.87262 )
+transform = Transform( 1, 0, 0, 0, 0.969586, 0.244749, 0, -0.244749, 0.969586, 0, 1.7964, 3.99975 )
 far = 50.0
+
+[node name="SpotLight" type="OmniLight" parent="vc_model_view/v_model_render/s_model_render_plane"]
+transform = Transform( 1, 0, 0, 0, -0.00256566, 0.999997, 0, -0.999997, -0.00256566, 0, 0.700411, 3.81589 )
+light_energy = 6.22
+
+[node name="SpotLight2" type="OmniLight" parent="vc_model_view/v_model_render/s_model_render_plane"]
+transform = Transform( 1, 0, 0, 0, -0.00256566, 0.999997, 0, -0.999997, -0.00256566, 0.000292301, 0.687239, -4.06661 )
+light_energy = 6.22
 
 [node name="b_open_model_list" type="Button" parent="."]
 anchor_left = 1.0
@@ -72,13 +80,113 @@ margin_bottom = 331.0
 
 [node name="vsb_zoom" type="VScrollBar" parent="."]
 margin_right = 12.0
-margin_bottom = 330.0
+margin_bottom = 353.0
 value = 100.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="b_save" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -41.0
+margin_top = -20.0
+disabled = true
+text = "Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_load" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -91.0
+margin_top = -20.0
+margin_right = -50.0
+disabled = true
+text = "Load"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="wd_save" type="WindowDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -164.5
+margin_top = -34.5
+margin_right = 164.5
+margin_bottom = 34.5
+window_title = "Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="vbc_template" type="VBoxContainer" parent="wd_save"]
+margin_left = 1.0
+margin_right = 327.0
+margin_bottom = 66.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="l_info" type="Label" parent="wd_save/vbc_template"]
+margin_right = 326.0
+margin_bottom = 14.0
+text = "Template Name:"
+
+[node name="le_name" type="LineEdit" parent="wd_save/vbc_template"]
+margin_top = 18.0
+margin_right = 326.0
+margin_bottom = 42.0
+
+[node name="b_save_name" type="Button" parent="wd_save/vbc_template"]
+margin_top = 46.0
+margin_right = 326.0
+margin_bottom = 66.0
+text = "Save"
+
+[node name="wd_load" type="WindowDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -155.5
+margin_top = -178.0
+margin_right = 155.5
+margin_bottom = 178.0
+window_title = "Saved Templates"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="il_templates" type="ItemList" parent="wd_load"]
+margin_left = 1.0
+margin_right = 310.0
+margin_bottom = 336.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_load_name" type="Button" parent="wd_load"]
+margin_left = 267.0
+margin_top = 336.0
+margin_right = 309.0
+margin_bottom = 356.0
+disabled = true
+text = "Load"
 [connection signal="hide" from="." to="." method="_on_wd_customize_hide"]
 [connection signal="popup_hide" from="." to="." method="_on_wd_customize_popup_hide"]
 [connection signal="pressed" from="b_open_model_list" to="." method="_on_b_open_model_list_pressed"]
 [connection signal="item_selected" from="il_parts" to="." method="_on_il_parts_item_selected"]
 [connection signal="item_selected" from="rtl_model_list" to="." method="_on_rtl_model_list_item_selected"]
+[connection signal="pressed" from="b_save" to="." method="_on_b_save_pressed"]
+[connection signal="pressed" from="b_load" to="." method="_on_b_load_pressed"]
+[connection signal="pressed" from="wd_save/vbc_template/b_save_name" to="." method="_on_b_save_name_pressed"]
+[connection signal="item_selected" from="wd_load/il_templates" to="." method="_on_il_templates_item_selected"]
+[connection signal="pressed" from="wd_load/b_load_name" to="." method="_on_b_load_name_pressed"]

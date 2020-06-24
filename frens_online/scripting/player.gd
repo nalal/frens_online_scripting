@@ -18,9 +18,9 @@ var cam_obj_x = 0
 #player move speed
 var speed = 30
 #player acceleration rate
-var acceleration = 5
+var acceleration = 6
 #player gravity
-var gravity = 1
+var gravity = 5
 #speed of player jump/fly up
 var p_jump_speed = 100
 #is player flying
@@ -40,13 +40,15 @@ var obj_is_held = false
 
 var can_attach = true
 
+var force_fp = false
+var manual_fp = false
 
 #chat lock
 onready var is_player_chatting = false
 onready var show_fps = true
 #player entity variables
 #todo: clean pointless vars and label with comments
-onready var player_model = $player_collide/player_model
+export onready var player_model #= $player_collide/player_model
 onready var p_cam = $player_collide/cam_rotate/head
 onready var p_jump_area = $player_collide/p_jump_area
 onready var p_collide = $player_collide
@@ -63,6 +65,9 @@ onready var pause_menu = $pause_menu
 onready var p_cam_lens = $player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/tp_cam
 onready var p_cam_r = $player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/tp_cam/r_cam
 onready var throw_point = $player_collide/throw_point
+onready var p_close_cam_area = $player_collide/cam_rotate/head/cam_zoom/p_close_cam_area
+onready var fp_cam = $player_collide/cam_rotate/head/cam_zoom/cam_move/fp_cam
+export onready var default_model = load("res://assets/models/hors.tscn")
 var render_dist
 
 
@@ -75,16 +80,40 @@ func _ready():
 		print("Player name '" + p_name + "' is greater than max name size")
 	print("Player '" + p_name + "' loaded.")
 	#set name above player to player's name
+	p_collide.add_child(default_model.instance())
+	player_model = "hors"
 	p_name_render.set_player_name(p_name)
 	#set player name in UI
 	h_p_info.set_player_hud_name(p_name)
 	h_p_info.set_version_text(g_version)
 	p_ray_f.add_exception(p_name_box)
+	p_ray_f.add_exception(p_close_cam_area)
 	p_cam_lens.set_zfar(globals.get_render_distance())
-	set_fog_vals()
+	fp_cam.set_zfar(globals.get_render_distance())
+	set_scale(globals.get_p_scale())
+	set_fog_vals(p_cam_lens.get_environment())
+	set_fog_vals(fp_cam.get_environment())
+	set_model("bloxhors_rigged")
 
-func set_fog_vals():
-	var env = p_cam_lens.get_environment()
+func set_model(model_id):
+	var cur_model = get_node("player_collide/" + player_model)
+	p_collide.remove_child(cur_model)
+	player_model = model_id
+	var model
+	for m in globals.get_model_list():
+		if m["id"] == model_id:
+			model = load(m["path"]).instance()
+			game.update_model_id(m["name"])
+			p_collide.add_child(model)
+
+
+func set_player_color(part, color):
+	(get_node("player_collide/" + player_model)).set_part_color(part, color)
+
+func set_player_visibility(part, vis):
+	(get_node("player_collide/" + player_model)).set_part_visibility(part, vis)
+
+func set_fog_vals(env):
 	env.set_fog_enabled(true)
 	env.set_fog_color("#a6a8aa")
 	env.set_fog_depth_begin(globals.get_render_distance() - 50)
@@ -120,8 +149,10 @@ func _input(event):
 			elif Input.is_action_pressed("move_free_cam_press") && !p_move_manual:
 				p_cam_manual = true
 		else:
+			if !p_cam_lock:
+				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 			p_cam_manual = false
-			p_move_manual =false
+			p_move_manual = false
 	if !is_player_chatting:
 		#rotate character and camera
 		if event is InputEventMouseMotion && (p_move_manual || p_cam_lock):
@@ -160,6 +191,14 @@ func _input(event):
 				true:
 					throw_obj()
 					obj_is_held = false
+		if Input.is_action_just_pressed("cam_perspective_toggle"):
+			match manual_fp:
+				false:
+					manual_fp = true
+					globals.using_fp = true
+				true:
+					manual_fp = false
+					globals.using_fp = false
 	if Input.is_action_just_pressed("chat_enter"):
 		if !is_player_chatting:
 			h_chat_message.set_editable(true)
@@ -171,6 +210,14 @@ func _input(event):
 			var message = h_chat_message.text
 			h_chat_message.text = ""
 			send_message(message)
+	if Input.is_action_just_released("move_left"):
+		game.send_player_move(enums.MOVE_TYPE.LEFT, false)
+	if Input.is_action_just_released("move_right"):
+		game.send_player_move(enums.MOVE_TYPE.RIGHT, false)
+	if Input.is_action_just_released("move_back"):
+		game.send_player_move(enums.MOVE_TYPE.BACKWARD, false)
+	if Input.is_action_just_released("move_forward"):
+		game.send_player_move(enums.MOVE_TYPE.FORWARD, false)
 
 #attach object to player
 func attach_obj(obj):
@@ -217,20 +264,37 @@ func send_message(message):
 
 #per physics frame check
 func _physics_process(delta):
+	match manual_fp:
+		true:
+			if !fp_cam.is_current():
+				fp_cam.make_current()
+		false:
+			if p_close_cam_area.get_overlapping_areas().size() > 1:
+				force_fp = true
+			else:
+				force_fp = false
+			if force_fp && !fp_cam.is_current():
+				fp_cam.make_current()
+			elif !force_fp && fp_cam.is_current():
+				p_cam_lens.make_current()
 	var head_base = p_collide.get_global_transform().basis
 	var direction = Vector3()
 	if !is_player_chatting:
 		#strafe movement, check to see if player is already strafing
 		if !Input.is_action_pressed("move_left") || !Input.is_action_pressed("move_right"):
 			if Input.is_action_pressed("move_left"):
+				game.send_player_move(enums.MOVE_TYPE.LEFT, true)
 				direction += head_base.x
 			elif Input.is_action_pressed("move_right"):
+				game.send_player_move(enums.MOVE_TYPE.RIGHT, true)
 				direction -= head_base.x
 		#forward/backward movement, check to see if player is already moving
 		if !Input.is_action_pressed("move_back") || !Input.is_action_pressed("move_forward"):
 			if Input.is_action_pressed("move_back"):
+				game.send_player_move(enums.MOVE_TYPE.BACKWARD, true)
 				direction -= head_base.z
 			elif Input.is_action_pressed("move_forward"):
+				game.send_player_move(enums.MOVE_TYPE.FORWARD, true)
 				direction += head_base.z
 		#toggle flying
 		if Input.is_action_just_pressed("move_fly"):
@@ -238,7 +302,6 @@ func _physics_process(delta):
 		direction = direction.normalized()
 		p_velocity = p_velocity.linear_interpolate(direction * speed, acceleration * delta)
 		#catch rotation input, done here to make cam movement more smooth
-
 		#jump command, checks for flying, if flying does not apply gravity
 		if !p_flying:
 			if Input.is_action_just_pressed("move_jump") && p_jump_area.get_overlapping_bodies().size() > 0:
@@ -254,7 +317,7 @@ func _physics_process(delta):
 		if !p_cam_lock && !p_cam_manual && !p_move_manual:
 				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		p_velocity = move_and_slide(p_velocity)
-		game.send_player_move(p_velocity)
+		#game.send_player_move(p_velocity)
 
 #set player name for entity
 #[name_in] = player entity name
@@ -264,7 +327,7 @@ func player_setname(name_in):
 #play animation from model
 #[anim] = animation name (string)
 func play_animation(anim):
-	player_model.play_animation(anim)
+	(get_node("player_collide/" + player_model)).play_animation(anim)
 
 func get_player_gpos():
 	var send_pos = p_collide.get_global_transform()

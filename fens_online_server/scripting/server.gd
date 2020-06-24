@@ -2,8 +2,8 @@ extends Node
 
 onready var tic_timer = $tic_timer
 
-#to be removed
-var proceesing_tic = false
+#banned players
+var banlist = []
 #position update array
 var pos_update = []
 #player list
@@ -12,7 +12,6 @@ var name_id_list = []
 var synced_objs = []
 #has no one loaded into the level yet
 var level_fresh = true
-
 #player data object
 #[p_name] = player name (string)
 #[p_id] = player ID (int)
@@ -46,17 +45,28 @@ master func update_obj_pos(obj):
 
 #start server process
 func init_conn_handler():
+	print("\n[==NETWORK SERVICE STARTING==]")
 	var network = NetworkedMultiplayerENet.new()
-	network.set_bind_ip("127.0.0.1")
-	network.create_server(globals.get_port(), 10)
-	network.connect("peer_connected", self, "_peer_connected")
-	network.connect("peer_disconnected", self, "_peer_disconnected")
-	get_tree().set_network_peer(network)
-	get_tree().multiplayer.connect("network_peer_packet", self, "_packet_recieved")
-	print("Connection listener started.")
-	print("Server ID is '" + str(get_tree().get_network_unique_id()) + "'")
-	#add master to list of users connected
-	_peer_connected(1)
+	if globals.get_ip_address().is_valid_ip_address():
+		network.set_bind_ip(globals.get_ip_address())
+		network.create_server(globals.get_port(), globals.get_player_max())
+		network.connect("peer_connected", self, "_peer_connected")
+		network.connect("peer_disconnected", self, "_peer_disconnected")
+		get_tree().set_network_peer(network)
+		get_tree().multiplayer.connect("network_peer_packet", self, "_packet_recieved")
+		print("Connection listener started.")
+		if globals.get_encryption_status():
+			print("Encryption is Enabled.")
+		else:
+			print("Encryption is Disabled.")
+		print("Listening on ", globals.get_ip_address(),":",globals.get_port())
+		print("Server ID is '" + str(get_tree().get_network_unique_id()) + "'")
+		#add master to list of users connected
+		print("\n[==NETWORK SERVICE RUNNING, ALL SYSTEMS NOMINAL==]")
+		_peer_connected(1)
+	else:
+		print("IP Address ", globals.quote(globals.get_ip_address()), " is not a valid IP Address.")
+		print("\n[==NETWORK SERVICE FAILED TO START, CHECK CONFIG==]")
 
 #when peer connects, do this
 #[id] = ID of peer connected
@@ -79,13 +89,12 @@ func _peer_connected(id):
 	if m_name != "":
 		_name_recieved(m_name.to_ascii())
 
-
 #When user disconnects, remove entity
 #[id] = ID of peer to remove (int)
 func _peer_disconnected(id):
 	print("User ID '" + str(id) + "' disconnected, removing player data.")
 	var player_remove = get_node("./players/" + str(id))
-	announce_players("Player '" + player_remove.player_name +"' disconnected")
+	sys_message(-1, "Player '" + player_remove.player_name +"' disconnected")
 	get_node("./players").remove_child(player_remove)
 	remove_disconnected_player(id)
 
@@ -114,10 +123,60 @@ master func _message_recieved(data):
 func send_message(id, message):
 	rpc_id(id, "message_recieved", message)
 
+func check_name(peer_name):
+	var invalid_names = [
+		"CON",
+		"PRN",
+		"AUX", 
+		"NUL", 
+		"COM1", 
+		"COM2", 
+		"COM3", 
+		"COM4", 
+		"COM5", 
+		"COM6", 
+		"COM7", 
+		"COM8", 
+		"COM9", 
+		"LPT1", 
+		"LPT2", 
+		"LPT3", 
+		"LPT4", 
+		"LPT5", 
+		"LPT6", 
+		"LPT7", 
+		"LPT8",
+		"LPT9"
+	]
+	for n in invalid_names:
+		if n == peer_name.to_upper():
+			rpc_id(get_tree().get_rpc_sender_id(), "kick_msg", "Invalid name.")
+			return false
+	var player_list = get_node("./players/")
+	for p in player_list.get_children():
+		if peer_name == p.get_p_name():
+			print("Player '" + peer_name + "' is already connected, dropping new connection.")
+			rpc_id(get_tree().get_rpc_sender_id(), "kick_msg", "Username already connected.")
+			return false
+	return peer_name.is_valid_filename()
+
+master func update_player_model(model_id):
+	get_player_node(get_tree().get_rpc_sender_id()).model_id = model_id
+	rpc("set_puppet_model", model_id, get_tree().get_rpc_sender_id())
+	pass
+
 #remote call for sending new player name to server
 #[data] = name received (ASCII)
 master func _name_recieved(data):
+	if globals.max_players == name_id_list.size():
+		rpc_id(get_tree().get_rpc_sender_id(), "kick_msg", "Server is full.")
+		kick_player(get_tree().get_rpc_sender_id())
 	var peer_name = data.get_string_from_ascii()
+	peer_name = peer_name.strip_escapes()
+	var name_valid = check_name(peer_name)
+	match name_valid:
+		false:
+			kick_player(get_tree().get_rpc_sender_id())
 	var id
 	if peer_name == "MASTER":
 		id = 1
@@ -129,7 +188,7 @@ master func _name_recieved(data):
 	player_node.set_p_id(id)
 	send_player(id, data)
 	send_connected_players(id)
-	announce_players("Player '" + peer_name + "' joined the server.")
+	sys_message(-1, "Player '" + peer_name + "' joined the server.")
 	var new_player = player_data.new()
 	new_player.p_name = peer_name
 	new_player.p_id = id
@@ -138,6 +197,7 @@ master func _name_recieved(data):
 	else:
 		new_player.p_role = enums.ROLES.USER
 		load_sync_list(id)
+		#commented out due to not working on phys obj sync at this time
 		#match level_fresh:
 		#	false:
 		#		rpc_id(get_node("players").get_child(0).get_p_id(),"send_obj_pos")
@@ -147,9 +207,9 @@ master func _name_recieved(data):
 
 #send message globally (deprecated, to be removed, use sys_message with ID of -1)
 #[message] = message to send to everyone (string)
-func announce_players(message):
-	message = "[SYSTEM]: " + message
-	rpc("message_recieved", 1, message.to_ascii())
+#func announce_players(message):
+#	message = "[SYSTEM]: " + message
+#	rpc("message_recieved", 1, message.to_ascii())
 
 #send system message to ID
 #[id] = ID of player to send message to (int) (if is -1 send to all connected)
@@ -170,12 +230,16 @@ func send_connected_players(id):
 	for p in player_list.get_children():
 		if p.get_p_id() != 1:
 			rpc_id(id, "load_player", p.get_p_id(), p.get_p_name().to_ascii(), p.get_player_pos())
+			rpc_id(id, "set_puppet_model", p.model_id, p.get_p_id())
+			for n in get_player_node(p.get_p_id()).get_model_data():
+				for set in n["settings"]:
+					rpc_id(id, "update_model", set, p.get_p_id())
 	pass
 
 #send move velocity data
 #[move_slide_val] = value to move and slide by (Vector3)
-master func send_move(move_slide_val):
-	rpc("move_player", move_slide_val, get_tree().get_rpc_sender_id())
+master func send_move(move_packet):
+	rpc("move_player", move_packet[0], move_packet[1], get_tree().get_rpc_sender_id())
 
 #send animation player to clients
 #[anim] = animation to play (string)
@@ -204,13 +268,19 @@ func get_id_from_name(p_name):
 			i += 1 
 	return false
 
+master func send_model_data(model_data):
+	print("Sending model data for '" + str(get_tree().get_rpc_sender_id()) + "'")
+	var player_to_model = get_player_node(get_tree().get_rpc_sender_id())
+	player_to_model.add_model_data(model_data)
+	rpc("update_model", model_data, get_tree().get_rpc_sender_id())
+
 #remove player from the game
 #[id] = ID of player to kick (int)
 func kick_player(id):
 	print("Player ID '" + str(id) + "' kicked")
 	get_tree().get_network_peer().disconnect_peer(id)
 	if get_player_node(id).get_p_name() != null:
-		announce_players("Player '" + get_player_node(id).get_p_name() + "' was kicked.")
+		sys_message(-1, "Player '" + get_player_node(id).get_p_name() + "' was kicked.")
 	remove_disconnected_player(id)
 
 #send player name and ID to client to load as puppet
@@ -278,6 +348,10 @@ master func command_send(command):
 			if com_parts.size() > 1 && check_role(sender, enums.ROLES.MOD):
 				kick_command(sender, com_parts[1])
 			return
+		"/ban":
+			if com_parts.size() > 1 && check_role(sender, enums.ROLES.MOD):
+				ban_command(sender, com_parts[1])
+			return
 		#list players command (/playerlist)
 		"/playerlist":
 			print_ids(sender)
@@ -292,6 +366,27 @@ master func obj_throw(obj_id):
 
 remote func recieve_throw_obj(throw_val):
 	print("Player '" + str(get_tree().get_rpc_sender_id()) + "' threw object with val '" + str(throw_val) + "'")
+
+func ban_command(sender, kick_id):
+	var targ_id = get_id_from_name(kick_id)
+	if !targ_id:
+		if !kick_id.is_valid_integer():
+			sys_message(sender, "INVALID PLAYER ID/NAME")
+		else:
+			if is_player_connected(int(kick_id)):
+				if compare_id_roles(sender, int(kick_id)):
+					rpc_id(kick_id, "kick_msg", "You have been banned.")
+					kick_player(int(kick_id))
+				else:
+					sys_message(sender, "YOU DO NOT HAVE THE AUTHORITY TO BAN THIS PLAYER")
+			else:
+				sys_message(sender, "INVALID PLAYER ID/NAME")
+	else:
+		if compare_id_roles(sender, targ_id):
+			rpc_id(kick_id, "kick_msg", "You have been banned.")
+			kick_player(targ_id)
+		else:
+			sys_message(sender, "YOU DO NOT HAVE THE AUTHORITY TO KICK THIS PLAYER")
 
 #kick player
 #[sender] = if of person to send kick command (int)

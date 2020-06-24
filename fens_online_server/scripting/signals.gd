@@ -4,6 +4,7 @@ signal command_sent
 signal server_tic
 
 func _ready():
+	print("\n[==SIGNAL HANDLER STARTED==]")
 	pass
 
 func connect_node_to_signal(node_path,signal_to_check,func_to_call):

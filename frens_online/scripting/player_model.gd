@@ -17,7 +17,9 @@ func _ready():
 	pass
 
 func add_asset(asset):
-	model_assets.push_back(asset)
+	var asset_to_add = model_asset.new()
+	asset_to_add = asset
+	model_assets.push_back(asset_to_add)
 
 func get_assets():
 	return model_assets

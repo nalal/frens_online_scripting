@@ -38,6 +38,7 @@ func _on_il_model_template_list_item_selected(index):
 
 
 func _on_b_load_pressed():
+	signals.on_model_changed(selected_model)
 	for m in globals.get_model_list():
 		if m["name"] == selected_model:
 			var temps = data.load_model_data(m["id"])

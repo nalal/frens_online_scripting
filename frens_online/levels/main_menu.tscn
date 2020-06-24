@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripting/main_menu.gd" type="Script" id=1]
-[ext_resource path="res://assets/menu.png" type="Texture" id=2]
 [ext_resource path="res://assets/text_box.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripting/wd_credits.gd" type="Script" id=4]
 [ext_resource path="res://assets/wd_customize.tscn" type="PackedScene" id=5]
@@ -21,17 +20,6 @@ color = Color( 0, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="menu_image_0" type="TextureRect" parent="."]
-anchor_top = 1.0
-anchor_bottom = 1.0
-margin_top = -40.0
-margin_right = 40.0
-
-[node name="menu" type="Sprite" parent="menu_image_0"]
-position = Vector2( 204.895, -134.452 )
-scale = Vector2( 0.673684, 0.570175 )
-texture = ExtResource( 2 )
 
 [node name="l_title" type="Label" parent="."]
 anchor_left = 0.5
@@ -61,6 +49,20 @@ margin_left = -32.0
 margin_top = -20.0
 margin_right = 32.0
 text = "Connect"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_customize" type="Button" parent="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -40.0
+margin_top = 35.0
+margin_right = 40.0
+margin_bottom = 55.0
+text = "Customize"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -214,7 +216,6 @@ __meta__ = {
 }
 
 [node name="wd_credits" type="WindowDialog" parent="."]
-visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -253,7 +254,18 @@ margin_bottom = 113.0
 text = "Close"
 
 [node name="wd_customize" parent="." instance=ExtResource( 5 )]
+visible = false
+
+[node name="l_menu_flavor_text" type="Label" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -43.9999
+margin_right = 70.0
+margin_bottom = -29.9999
+rect_scale = Vector2( 3.026, 3.408 )
+text = "H O R S E S"
 [connection signal="pressed" from="Control/b_play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="Control/b_customize" to="." method="_on_b_customize_pressed"]
 [connection signal="pressed" from="Control/b_options" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="Control/b_local" to="." method="_on_b_local_pressed"]
 [connection signal="pressed" from="name_enter_dialog/b_enter_name" to="." method="_on_b_enter_name_pressed"]

@@ -8,11 +8,64 @@ onready var connection_dialog = $connection_dialog
 onready var le_ip = $connection_dialog/le_ip
 onready var le_port = $connection_dialog/le_port
 onready var wd_credits = $wd_credits
+onready var l_menu_flavor_text = $l_menu_flavor_text
+const menu_text = [
+	"A melting pot of tolerance.",
+	"WE'RE ALL GONNA MAKE IT BROS",
+	"Twilight sparkle is best pony",
+	"*crack* ALRIGHT, so...",
+	"Shoutout to Hoodie",
+	"/)",
+	"THREE MONTHS OF WINTER COOLNESS",
+	"Powerd by several horses",
+	"GET AMPED",
+	"P U T  Y O U R  A S S  I N  T H E  A I R",
+	"Louder!",
+	"Phew!",
+	"Go to bed, seth",
+	"IWTCIRD",
+	">when mom finds the jar",
+	">no hooves",
+	"Fucking glimmershits...",
+	"The ride never ends.",
+	"Spikefags are pathetic",
+	"Take me to the gay bathhouse",
+	"2D women are not important",
+	"You gotta try some of this bomb ass tea, man",
+	"If it's anthro, it gets the b&thro",
+	"FUCK camera collision",
+	"'With a car, you can go anywhere' he said out loud",
+	"Wojak is just rageface 2.0 and posting wojak makes you look bad",
+	"Griffons did this...",
+	"DANCE ON ME BALLS, CAT FUCKING A HANDBAG",
+	"You were real good son, maybe even the best",
+	"So wait, what actually happened in September?",
+	"You may call it fake, but this is real magic",
+	"See /app/ for updates",
+	"Don't forget, you're here forever!",
+	"Hey guys, I left in 2016 but now I'm back, what'd I miss?",
+	">season 3 is cannon",
+	">implying",
+	">tfw shadowbanned on derpibooru",
+	"I'll die with the herd",
+	"I am the last painted pony",
+	"Hello fren",
+	"Though stirups may rust, reins turn to dust, dreamers never break down!",
+	"You aight, anon, you aight.",
+	"Your waifu's shit",
+	"What would the cutie mark of somepony who's talent is arguing even look like?",
+	"(USER WAS BANNED FOR THIS POST)",
+	"The kirin is offering you a drink",
+	"h e h"
+]
 
 func _ready():
 	if globals.is_kicked:
 		globals.is_kicked = false
 		message_box.call_message_box("Disconnected", globals.get_kick_message())
+	randomize()
+	l_menu_flavor_text.text = menu_text[rand_range(0,menu_text.size())]
+	menu_text
 
 #When play pressed, ask for name
 func _on_Play_pressed():

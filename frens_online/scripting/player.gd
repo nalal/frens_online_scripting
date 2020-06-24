@@ -81,6 +81,7 @@ func _ready():
 	print("Player '" + p_name + "' loaded.")
 	#set name above player to player's name
 	p_collide.add_child(default_model.instance())
+	player_model = "hors"
 	p_name_render.set_player_name(p_name)
 	#set player name in UI
 	h_p_info.set_player_hud_name(p_name)
@@ -92,12 +93,25 @@ func _ready():
 	set_scale(globals.get_p_scale())
 	set_fog_vals(p_cam_lens.get_environment())
 	set_fog_vals(fp_cam.get_environment())
+	set_model("bloxhors_rigged")
+
+func set_model(model_id):
+	var cur_model = get_node("player_collide/" + player_model)
+	p_collide.remove_child(cur_model)
+	player_model = model_id
+	var model
+	for m in globals.get_model_list():
+		if m["id"] == model_id:
+			model = load(m["path"]).instance()
+			game.update_model_id(m["name"])
+			p_collide.add_child(model)
+
 
 func set_player_color(part, color):
-	player_model.set_part_color(part, color)
+	(get_node("player_collide/" + player_model)).set_part_color(part, color)
 
 func set_player_visibility(part, vis):
-	player_model.set_part_visibility(part, vis)
+	(get_node("player_collide/" + player_model)).set_part_visibility(part, vis)
 
 func set_fog_vals(env):
 	env.set_fog_enabled(true)
@@ -313,7 +327,7 @@ func player_setname(name_in):
 #play animation from model
 #[anim] = animation name (string)
 func play_animation(anim):
-	player_model.play_animation(anim)
+	(get_node("player_collide/" + player_model)).play_animation(anim)
 
 func get_player_gpos():
 	var send_pos = p_collide.get_global_transform()

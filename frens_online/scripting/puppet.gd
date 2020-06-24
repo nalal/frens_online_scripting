@@ -122,10 +122,21 @@ func play_animation(anim):
 func remove_puppet():
 	get_parent().remove_child(self)
 
+func set_puppet_model_id(model_id):
+	pu_collide.remove_child(pu_model)
+	player_model = model_id
+	var model
+	for m in globals.get_model_list():
+		if m["id"] == model_id:
+			model = load(m["path"]).instance()
+			pu_model = model
+			pu_collide.add_child(model)
+
 func set_puppet_model(model_data):
-	for af in model_data["asset_flags"]:
-		match af:
-			enums.M_ASSET_FLAGS.COLOR:
-				pu_model.set_part_color(model_data["asset_id"], model_data["asset_color"])
-			enums.M_ASSET_FLAGS.TOGGLE:
-				pu_model.set_part_visibility(model_data["asset_id"], model_data["asset_visible"])
+	for s in model_data:
+		for af in s["asset_flags"]:
+			match af:
+				enums.M_ASSET_FLAGS.COLOR:
+					pu_model.set_part_color(s["asset_id"], s["asset_color"])
+				enums.M_ASSET_FLAGS.TOGGLE:
+					pu_model.set_part_visibility(s["asset_id"], s["asset_visible"])

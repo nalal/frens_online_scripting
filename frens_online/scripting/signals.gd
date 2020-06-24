@@ -6,6 +6,7 @@ signal level_handler_loaded
 signal load_level
 signal load_complete
 signal load_models
+signal on_model_changed
 
 func _ready():
 	print("\n[==SIGNAL HANDLER STARTED==]")
@@ -13,6 +14,9 @@ func _ready():
 func load_models():
 	print("Signaling for models to load.")
 	emit_signal("load_models")
+
+func on_model_changed(model_id):
+	emit_signal("on_model_changed", model_id)
 
 #signal for tic_timer
 func tic_timer():
@@ -37,5 +41,5 @@ func load_complete():
 	emit_signal("load_complete")
 
 func connect_node_to_signal(node_path, signal_to_check, func_to_call):
-	print("Adding '" + func_to_call + "' to signal '" + signal_to_check + "' for node '" + node_path +"'")
+	print("Adding '" + func_to_call + "' to signal '" + signal_to_check + "' for node '" + str(node_path) +"'")
 	self.connect(signal_to_check, get_node(node_path), func_to_call)

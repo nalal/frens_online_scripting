@@ -1,6 +1,6 @@
 extends Node
 
-enum {NAME_PACKET, MESSAGE_PACKET, POS_PACKET, REQUEST_TICK_PACKET, COMMAND_PACKET, OBJ_PACKET, PHYS_INTERACT_PACKET, THROW_PACKET, MOVE_PACKET, OBJ_UPDATE_PACKET, PLAYER_MODEL_DATA_PACKET}
+enum {NAME_PACKET, MESSAGE_PACKET, POS_PACKET, REQUEST_TICK_PACKET, COMMAND_PACKET, OBJ_PACKET, PHYS_INTERACT_PACKET, THROW_PACKET, MOVE_PACKET, OBJ_UPDATE_PACKET, PLAYER_MODEL_DATA_PACKET, MODEL_ID_PACKET}
 
 puppet var start_level
 onready var tic_timer
@@ -16,6 +16,7 @@ func _ready():
 	level_buff.add_child(loading_screen)
 	get_node("level_buffer/LOADING").set_loading_message("Connecting...")
 	connect_server(globals.get_server_ip(), globals.get_server_port())
+	signals.connect_node_to_signal(globals.get_networking_node().get_path(), "on_model_changed", "update_model_id")
 
 #connect to server from IP,PORT
 #[server_ip] = IP of server to connect to
@@ -89,6 +90,17 @@ func process_local_command(command):
 	var player = get_node("/root/game/level_buffer/Level/player")
 	player.load_message("Invalid command '" + command + "'")
 
+func update_model_id(model_id):
+	send_packet(model_id.to_ascii(), MODEL_ID_PACKET)
+
+puppet func set_puppet_model(model_id, id):
+	if id != local_id:
+		print("Got model ID '" + model_id.get_string_from_ascii() + "' from ID " + str(id))
+		for m in globals.get_model_list():
+			if m["name"] == model_id.get_string_from_ascii():
+				get_puppet(id).set_puppet_model_id(m["id"])
+				return
+
 #send player name to server
 #[player_name] = name to send
 func send_name(player_name):
@@ -137,6 +149,9 @@ func send_packet(packet, type, id = 1):
 			return
 		PLAYER_MODEL_DATA_PACKET:
 			rpc_id(id, "send_model_data", packet)
+			return
+		MODEL_ID_PACKET:
+			rpc_id(id, "update_player_model", packet)
 			return
 	print("INVALID PACKET TYPE " + str(type))
 
@@ -298,4 +313,4 @@ puppet func update_model(model_data, id):
 		local_id:
 			return
 	print(str(model_data))
-	get_puppet(id).set_puppet_model(model_data)
+	get_puppet(id).set_puppet_model(model_data["settings"])

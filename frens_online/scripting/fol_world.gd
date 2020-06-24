@@ -6,7 +6,7 @@ onready var spawn_node = Spatial.new()
 
 func _ready():
 	set_spawn_node("Spawn")
-	globals.set_p_scale(Vector3(0.377, 0.335, 0.379))
+	globals.set_p_scale(Vector3(0.377, 0.377, 0.377))
 	signals.load_complete()
 	#level.spawn_ent(enums.ENT_TYPE.PHYS_OBJ, "res://assets/phys_obj.tscn", null, "spawn_phys_0")
 

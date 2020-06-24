@@ -156,6 +156,11 @@ func check_name(peer_name):
 			return false
 	return peer_name.is_valid_filename()
 
+master func update_player_model(model_id):
+	get_player_node(get_tree().get_rpc_sender_id()).model_id = model_id
+	rpc("set_puppet_model", model_id, get_tree().get_rpc_sender_id())
+	pass
+
 #remote call for sending new player name to server
 #[data] = name received (ASCII)
 master func _name_recieved(data):
@@ -221,6 +226,7 @@ func send_connected_players(id):
 	for p in player_list.get_children():
 		if p.get_p_id() != 1:
 			rpc_id(id, "load_player", p.get_p_id(), p.get_p_name().to_ascii(), p.get_player_pos())
+			rpc_id(id, "set_puppet_model", p.model_id, p.get_p_id())
 			for n in get_player_node(p.get_p_id()).get_model_data():
 				for set in n["settings"]:
 					rpc_id(id, "update_model", set, p.get_p_id())

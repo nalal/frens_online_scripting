@@ -3,6 +3,7 @@
 [ext_resource path="res://scripting/wd_customize.gd" type="Script" id=1]
 
 [node name="wd_customize" type="WindowDialog"]
+visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -27,14 +28,22 @@ __meta__ = {
 [node name="v_model_render" type="Viewport" parent="vc_model_view"]
 size = Vector2( 257, 329 )
 handle_input_locally = false
-render_target_update_mode = 0
+render_target_update_mode = 3
 
 [node name="s_model_render_plane" type="Spatial" parent="vc_model_view/v_model_render"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0160394, 0 )
 
 [node name="Camera" type="Camera" parent="vc_model_view/v_model_render/s_model_render_plane"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7964, 9.87262 )
+transform = Transform( 1, 0, 0, 0, 0.969586, 0.244749, 0, -0.244749, 0.969586, 0, 1.7964, 3.99975 )
 far = 50.0
+
+[node name="SpotLight" type="OmniLight" parent="vc_model_view/v_model_render/s_model_render_plane"]
+transform = Transform( 1, 0, 0, 0, -0.00256566, 0.999997, 0, -0.999997, -0.00256566, 0, 0.700411, 3.81589 )
+light_energy = 6.22
+
+[node name="SpotLight2" type="OmniLight" parent="vc_model_view/v_model_render/s_model_render_plane"]
+transform = Transform( 1, 0, 0, 0, -0.00256566, 0.999997, 0, -0.999997, -0.00256566, 0.000292301, 0.687239, -4.06661 )
+light_energy = 6.22
 
 [node name="b_open_model_list" type="Button" parent="."]
 anchor_left = 1.0
@@ -143,7 +152,6 @@ margin_bottom = 66.0
 text = "Save"
 
 [node name="wd_load" type="WindowDialog" parent="."]
-visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5

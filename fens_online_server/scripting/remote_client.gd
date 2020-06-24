@@ -11,6 +11,8 @@ onready var player_role
 #player model data
 onready var player_model = []
 
+onready var model_id
+
 var movement = {
 	"moving_forward":false,
 	"moving_back":false,

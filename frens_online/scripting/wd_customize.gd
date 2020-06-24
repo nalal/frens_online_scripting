@@ -171,7 +171,12 @@ func _on_b_save_name_pressed():
 	var parts_dict = loaded_model.get_parts()
 	var assets = loaded_model.get_assets()
 	for a in assets:
-		var save_data = custom_save
+		var save_data ={
+			"asset_id" : "",
+			"asset_color" : "",
+			"asset_visible" : true,
+			"asset_flags" : []
+		}
 		save_data["asset_flags"] = a.asset_flags
 		save_data["asset_id"] = a.asset_id
 		for af in a.asset_flags:
@@ -218,6 +223,7 @@ func _on_b_load_name_pressed():
 	for t in templates["templates"]:
 		if t["template_name"] == il_templates.get_item_text(selected_load):
 			load_template(t)
+	wd_load.hide()
 	pass # Replace with function body.
 
 

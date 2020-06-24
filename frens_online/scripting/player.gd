@@ -66,7 +66,7 @@ onready var p_cam_lens = $player_collide/cam_rotate/head/cam_zoom/cam_move/cam_p
 onready var p_cam_r = $player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys/tp_cam/r_cam
 onready var throw_point = $player_collide/throw_point
 onready var p_close_cam_area = $player_collide/cam_rotate/head/cam_zoom/p_close_cam_area
-onready var fp_cam = $player_collide/cam_rotate/head/cam_zoom/cam_move/fp_cam
+onready var fp_cam = $player_collide/cam_rotate/head/fp_cam
 export onready var default_model = load("res://assets/models/hors.tscn")
 var render_dist
 

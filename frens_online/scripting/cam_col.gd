@@ -1,6 +1,6 @@
 extends KinematicBody
 
-onready var p_f_cam = $fp_cam
+onready var p_f_cam = get_node("../../fp_cam")
 onready var p_cam_hitbox = $cam_phys/cam_collision_area
 onready var p_cam_buffer = $cam_phys/cam_collision_buffer
 onready var p_cam_ray_f = $cam_phys/cam_ray_f

@@ -19,6 +19,7 @@ config/name="frens_online"
 run/main_scene="res://levels/main_menu.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="frens_online"
+run/frame_delay_msec=17
 config/icon="res://icon.png"
 
 [autoload]
@@ -30,11 +31,13 @@ level="*res://scripting/level_handler.tscn"
 enums="*res://scripting/enums.gd"
 data="*res://scripting/data.gd"
 custom_content="*res://scripting/custom_content.gd"
+http_handler="*res://scripting/http_handler.tscn"
 
 [display]
 
 window/size/width=1920
 window/size/height=1080
+window/vsync/use_vsync=false
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 
@@ -142,9 +145,19 @@ cam_perspective_toggle={
  ]
 }
 
+[physics]
+
+2d/thread_model=2
+
 [rendering]
 
 threads/thread_model=2
+quality/filters/anisotropic_filter_level=1
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
+quality/reflections/texture_array_reflections=false
+quality/reflections/high_quality_ggx=false
+quality/shading/force_lambert_over_burley=true
+quality/depth_prepass/enable=false
+quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"

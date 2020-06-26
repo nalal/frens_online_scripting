@@ -14,6 +14,16 @@ onready var config_data = ConfigFile.new()
 onready var encryption_key_config = ConfigFile.new()
 onready var rand_generator = RandomNumberGenerator.new()
 
+#list of mods to be loaded on connect
+var mod_list = []
+#Example entry for mod list for the sake of mental stability
+#var mod_entry = {
+#	"name":"mod_name",
+#	"type":"(ENUM) MOD_TYPE",
+#	"link":"URL"
+#}
+
+
 var debug_mode = false
 var freshStart = true
 
@@ -49,7 +59,6 @@ func _ready():
 #Load config data
 func load_configs():
 	load_settings_config()
-
 	port = config_data.get_value("network", "port")
 	max_players = config_data.get_value("network", "max_players")
 	tic_rate = config_data.get_value("network", "tic_rate")
@@ -61,6 +70,18 @@ func load_configs():
 		encryption_key = encryption_key_config.get_value("encryption", "encryption_key")
 		if encryption_key != null || "":
 			encryption_status = true
+
+#Add mod to server's mod list
+#[mod_name] = name of mod, will be saved as "mod_name".pck (string)
+#[mod_type] = type of mod (enum::MOD_TYPE)
+#[mod_link] = link to download mod (string) (default = "")
+func add_mod(mod_name, mod_type, mod_link = ""):
+	var mod_entry = {
+		"name":mod_name,
+		"type":mod_type,
+		"link":mod_link
+	}
+	mod_list.push_back(mod_entry)
 
 #Go through required filesystems and check for existence
 func check_all_filesystems():
@@ -90,48 +111,38 @@ func load_missing_settings():
 	if not config_data.has_section_key("network", "port"):
 		config_data.set_value("network", "port", 25565)
 		config_changes += 1
-	
 	if not config_data.has_section_key("network", "tic_rate"):
 		config_data.set_value("network", "tic_rate", 10)
 		config_changes += 1
-	
 	if not config_data.has_section_key("network", "max_players"):
 		config_data.set_value("network", "max_players", 16)
 		config_changes += 1
-	
 	if not config_data.has_section_key("network", "start_level"):
 		config_data.set_value("network", "start_level", "Entry Level")
 		config_changes += 1
-			
 	if not config_data.has_section_key("network", "rcon_pass"):
 		if debug_mode:
 			print("Generating rcon_pass.")
 		config_data.set_value("network", "rcon_pass", generate_random_string(16))
 		config_changes += 1
-		
 	if not config_data.has_section_key("network", "ip_address"):
 		config_data.set_value("network", "ip_address", "0.0.0.0")
 		config_changes += 1
-
 		# Encryption
 	if not config_data.has_section_key("encryption", "enabled"):
 		config_data.set_value("encryption", "enabled", false)
 		config_changes += 1
-
 	if config_data.get_value("encryption","enabled"):
 		if not encryption_key_config.has_section_key("encryption", "encryption_key") or encryption_key_config.get_value("encryption","encryption_key") == "":
 			print("Encryption key enabled, but a key was not found, Generating one")
 			encryption_key_config.set_value("encryption","encryption_key",generate_random_string(32))
 			config_changes += 1
-
 		if not config_data.has_section_key("encryption", "encrypt_world"):
 			config_data.set_value("encryption", "encrypt_world", false)
 			config_changes += 1
-
 		if not config_data.has_section_key("encryption", "encrypt_players"):
 			config_data.set_value("encryption", "encrypt_players", false)
 			config_changes += 1
-
 	if config_changes > 0: 
 		print("Preformed ", config_changes, " changed to Config, Saving Changes.")
 		save_settings_config()
@@ -140,10 +151,8 @@ func load_missing_settings():
 func load_settings_config():
 	config_data.load(settings_config_path)
 	encryption_key_config.load(encryption_key_path)
-
 	# Lets add any settings that dont exist
 	load_missing_settings()
-
 	for section in config_data.get_sections():
 		if debug_mode:
 			print("[",section, "]")
@@ -156,7 +165,6 @@ func load_settings_config():
 func reload_settings():
 	if freshStart == false:
 		print("Reloading Config")
-	
 	save_settings_config()
 	load_settings_config()
 
@@ -165,7 +173,6 @@ func reload_settings():
 func generate_random_string(length):
 	var generated_string = ""
 	var buffer = PoolByteArray()
-		
 	var char_count = length
 	while char_count > 0:
 		var letter = ""
@@ -179,13 +186,11 @@ func generate_random_string(length):
 				letter = rand_generator.randi_range(48,57)
 		buffer.append(letter)
 		char_count -= 1
-
 	generated_string = buffer.get_string_from_ascii()
 	if generated_string.length() < length:
 		print("This is longer than it should be, Da fuck?") 
 	if debug_mode: 
 		print("[generate_random_string]: ", str(generated_string))
-
 	return str(generated_string)
 
 #Wrap string in quotation marks
@@ -220,6 +225,13 @@ func get_tic():
 func set_start_level(level):
 	print("Start level is set to '" + level + "'")
 	start_level = level
+
+#Update start level and issue level change command to players connected
+#[level] = level name to set as start level (string)
+func change_start_level(level):
+	print("Changing start level to '" + level + "'")
+	start_level = level
+	signals.change_level()
 
 #Get starting level
 func get_start_level():

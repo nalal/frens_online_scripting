@@ -2,6 +2,7 @@ extends Node
 
 signal command_sent
 signal server_tic
+signal change_level
 
 func _ready():
 	print("\n[==SIGNAL HANDLER STARTED==]")
@@ -16,3 +17,6 @@ func command_sent():
 
 func server_tic():
 	emit_signal("server_tic")
+
+func change_level():
+	emit_signal("change_level")

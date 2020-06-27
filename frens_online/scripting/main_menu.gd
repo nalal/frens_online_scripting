@@ -34,7 +34,7 @@ const menu_text = [
 	"You gotta try some of this bomb ass tea, man",
 	"If it's anthro, it gets the b&thro",
 	"FUCK camera collision",
-	"'With a car, you can go anywhere' he said out loud",
+	"'With a car, you can go anywhere you want' he said out loud",
 	"Wojak is just rageface 2.0 and posting wojak makes you look bad",
 	"Griffons did this...",
 	"DANCE ON ME BALLS, CAT FUCKING A HANDBAG",

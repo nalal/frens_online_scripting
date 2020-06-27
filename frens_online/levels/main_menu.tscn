@@ -254,7 +254,6 @@ margin_bottom = 113.0
 text = "Close"
 
 [node name="wd_customize" parent="." instance=ExtResource( 5 )]
-visible = false
 
 [node name="l_menu_flavor_text" type="Label" parent="."]
 anchor_top = 1.0

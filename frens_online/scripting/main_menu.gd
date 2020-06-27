@@ -9,6 +9,7 @@ onready var le_ip = $connection_dialog/le_ip
 onready var le_port = $connection_dialog/le_port
 onready var wd_credits = $wd_credits
 onready var l_menu_flavor_text = $l_menu_flavor_text
+onready var l_error_name = $name_enter_dialog/l_error
 const menu_text = [
 	"A melting pot of tolerance.",
 	"WE'RE ALL GONNA MAKE IT BROS",
@@ -84,17 +85,18 @@ func _on_b_enter_name_pressed():
 		if name_in.text.length() <= 25:
 			globals.set_name(name_in.text)
 			if pass_in.text.length() <= 0:
-				name_popup.hide()
-				message_box.call_message_box("ERROR", "Please provide a password.")
+				#name_popup.hide()
+				l_error_name.text = "Invalid password"
 			else:
 				globals.set_pass(pass_in.text)
+				l_error_name.text = ""
 				get_tree().change_scene("res://scripting/networking.tscn")
 		else:
-			name_popup.hide()
-			message_box.call_message_box("ERROR", "Name must be less than 25 characters long.")
+			#name_popup.hide()
+			l_error_name.text = "Name too long"
 	else:
-		name_popup.hide()
-		message_box.call_message_box("ERROR", "Please enter a name.")
+		#name_popup.hide()
+		l_error_name.text = "No name"
 
 #Offline mode button, does nothing atm
 func _on_b_local_pressed():

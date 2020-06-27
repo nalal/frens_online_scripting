@@ -146,6 +146,14 @@ margin_bottom = -50.0
 text = "Please enter a user name and password"
 align = 1
 
+[node name="l_error" type="Label" parent="name_enter_dialog"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = -24.0
+margin_right = 50.0
+margin_bottom = -10.0
+
 [node name="ctb_name_error_message" parent="." instance=ExtResource( 3 )]
 visible = false
 

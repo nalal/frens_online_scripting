@@ -68,11 +68,14 @@ onready var throw_point = $player_collide/throw_point
 onready var p_close_cam_area = $player_collide/cam_rotate/head/cam_zoom/p_close_cam_area
 onready var fp_cam = $player_collide/cam_rotate/head/fp_cam
 export onready var default_model = load("res://assets/models/hors.tscn")
-var render_dist
 
+var render_dist
+var menu_open = false
 
 #player init
 func _ready():
+	signals.connect_node_to_signal(get_path(), "on_menu_open", "menu_opened")
+	signals.connect_node_to_signal(get_path(), "on_menu_close", "menu_closed")
 	set_global_transform(get_node("/root/game/level_buffer/Level").get_spawn_node_pos())
 	p_name = globals.get_name()
 	#catch for oversized player name, will be useful later
@@ -94,6 +97,12 @@ func _ready():
 	set_fog_vals(p_cam_lens.get_environment())
 	set_fog_vals(fp_cam.get_environment())
 	set_model("bloxhors_rigged")
+
+func menu_opened():
+	menu_open = true
+
+func menu_closed():
+	menu_open = false
 
 func set_model(model_id):
 	var cur_model = get_node("player_collide/" + player_model)
@@ -146,7 +155,7 @@ func _input(event):
 		if Input.is_action_pressed("move_cam_press") || Input.is_action_pressed("move_free_cam_press"):
 			if Input.is_action_pressed("move_cam_press") && !p_cam_manual:
 				p_move_manual = true
-			elif Input.is_action_pressed("move_free_cam_press") && !p_move_manual:
+			elif Input.is_action_pressed("move_free_cam_press") && !p_move_manual && !menu_open:
 				p_cam_manual = true
 		else:
 			if !p_cam_lock:

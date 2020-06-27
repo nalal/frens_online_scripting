@@ -3,7 +3,6 @@
 [ext_resource path="res://scripting/wd_customize.gd" type="Script" id=1]
 
 [node name="wd_customize" type="WindowDialog"]
-visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -28,7 +27,7 @@ __meta__ = {
 [node name="v_model_render" type="Viewport" parent="vc_model_view"]
 size = Vector2( 257, 329 )
 handle_input_locally = false
-render_target_update_mode = 3
+render_target_update_mode = 0
 
 [node name="s_model_render_plane" type="Spatial" parent="vc_model_view/v_model_render"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0160394, 0 )

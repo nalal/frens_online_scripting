@@ -10,6 +10,7 @@ var selected_model
 var selected_template
 
 func _ready():
+	signals.on_menu_open()
 	for m in globals.get_model_list():
 		il_model_list.add_item(m["name"])
 
@@ -53,3 +54,8 @@ func _on_b_load_pressed():
 								enums.M_ASSET_FLAGS.TOGGLE:
 									level.get_current_level().get_node("player").set_player_visibility(t_setting["asset_id"], t_setting["asset_visible"])
 
+
+
+func _on_wd_load_model_hide():
+	signals.on_menu_close()
+	pass # Replace with function body.

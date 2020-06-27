@@ -7,6 +7,8 @@ signal load_level
 signal load_complete
 signal load_models
 signal on_model_changed
+signal on_menu_open
+signal on_menu_close
 
 func _ready():
 	print("\n[==SIGNAL HANDLER STARTED==]")
@@ -15,8 +17,20 @@ func load_models():
 	print("Signaling for models to load.")
 	emit_signal("load_models")
 
+func on_menu_open(menu_name = null):
+	print("menu open")
+	match menu_name:
+		null:
+			emit_signal("on_menu_open")
+
 func on_model_changed(model_id):
 	emit_signal("on_model_changed", model_id)
+
+func on_menu_close(menu_name = null):
+	print("menu closed")
+	match menu_name:
+		null:
+			emit_signal("on_menu_close")
 
 #signal for tic_timer
 func tic_timer():

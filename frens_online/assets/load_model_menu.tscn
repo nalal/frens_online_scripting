@@ -49,6 +49,7 @@ text = "Load"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="hide" from="." to="." method="_on_wd_load_model_hide"]
 [connection signal="item_selected" from="il_model_template_list" to="." method="_on_il_model_template_list_item_selected"]
 [connection signal="item_selected" from="il_model_list" to="." method="_on_il_model_list_item_selected"]
 [connection signal="pressed" from="b_load" to="." method="_on_b_load_pressed"]

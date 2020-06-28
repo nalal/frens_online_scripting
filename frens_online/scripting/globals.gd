@@ -134,7 +134,7 @@ func process_Config():
 		move_fly = 86,
 		move_reset_cam = 67
 	}
-	var video_template = {
+	var graphics_template = {
 		render_distance = 100
 	}
 
@@ -143,20 +143,30 @@ func process_Config():
 		var keyval
 		if bindExists:
 			keyval = settingsConfig.get_value("keybinds", keybind)
-			# TODO: Mark there to show on DEBUG MODE ONLY
-			print("Setting '", keybind, "' to '", keyval, "' From configuration")
+			# TODO: Mark these show on DEBUG MODE
+			#print("Setting '", keybind, "' to '", keyval, "' From configuration")
 		else: 
 			keyval = keybind_template[keybind]
 			settingsConfig.set_value("keybinds", keybind, keyval)
-			# TODO: Mark there to show on DEBUG MODE ONLY
-			print("Setting ", keybind, "to", keyval, "From default")
+			# TODO: Mark these show on DEBUG MODE
+			#print("Setting ", keybind, " to ", keyval, " From default")
 
 		if typeof(keyval) != TYPE_STRING:
 			print("Loaded bind '" + keybind + " = " + OS.get_scancode_string(keyval) + "'")
 		else:
 			print("Loaded bind '" + keybind + " = " + keyval + "'")
 			keybinds[keybind] = keyval
+	for gSettings in Array(graphics_template.keys()):
+		var settingExists = settingsConfig.has_section_key("graphics", gSettings)
+		var val
 		
+		if settingExists:
+			val = settingsConfig.get_value("graphics", gSettings)
+		else:
+			val = graphics_template[gSettings]
+			settingsConfig.set_value("graphics", gSettings, val)
+		
+		print("Set '", gSettings, "' to ", val)
 	if configMissing:
 		print("Configfile missing, Will be generated.")
 		save_config()
@@ -172,6 +182,8 @@ func save_config():
 	err = settingsConfig.load(settings_config_file_path)
 	if err != OK:
 		print("We just saved and cant load it again??")
+	if err == OK:
+		print("Saved Config.")
 
 func set_binds():
 	for key in keybinds.keys():

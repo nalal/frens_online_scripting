@@ -21,6 +21,7 @@ config/use_custom_user_dir=true
 config/custom_user_dir_name="frens_online"
 run/frame_delay_msec=17
 config/icon="res://icon.png"
+config/version="v0.1.0"
 
 [autoload]
 

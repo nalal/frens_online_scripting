@@ -6,18 +6,14 @@ onready var binding_list = $pu_binding_list
 onready var le_render_dist = $le_render_dist
 
 func _ready():
-	var config_data = ConfigFile.new()
-	if config_data.load(globals.get_binding_config_path()) == OK:
-		for key in config_data.get_section_keys("video"):
-			var keyval = config_data.get_value("video", key)
-			if key == "render_distance":
-				if typeof(keyval) == TYPE_INT:
-					le_render_dist.text = keyval
-				else:
-					print("Render distance set to incorrect value type, using default")
-					le_render_dist.text = globals.get_render_distance()
-	else:
-		print("Config file not located, generating new.")
+	for key in globals.settingsConfig.get_section_keys("graphics"):
+		var keyval = globals.settingsConfig.get_value("graphics", key)
+		# This can be extented if we have an array of all expected settings - Phoenix
+		if key == "render_distance":
+			if typeof(keyval) == TYPE_INT:
+				le_render_dist.text = str(keyval)
+			else:
+				print("Render distance set to incorrect value type")
 
 #open bindings menu
 func _on_b_bindings_pressed():
@@ -29,7 +25,11 @@ func _on_b_back_pressed():
 
 
 func _on_b_save_pressed():
+	# If you plan on having multiple settings here, u should store them as some kinda array
+	# It'd make it easier to extend this - Phoenix
 	if le_render_dist.text.is_valid_integer():
 		globals.set_render_distance(int(le_render_dist.text))
-#	var config_data = ConfigFile.new()
-#	if config_data.load(globals.get_binding_config_path()) == OK:
+		globals.settingsConfig.set_value("graphics", "render_distance", int(le_render_dist.text))
+		globals.save_config()
+	else:
+		print("Render Distance must be an number.")

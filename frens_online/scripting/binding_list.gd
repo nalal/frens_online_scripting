@@ -17,20 +17,16 @@ onready var polling_input = false
 func _ready():
 	list.add_item("Action", null, false)
 	list.add_item("Key", null, false)
-	var config_data = ConfigFile.new()
-	if config_data.load(globals.get_binding_config_path()) == OK:
-		for key in config_data.get_section_keys("keybinds"):
-			var keyval = config_data.get_value("keybinds", key)
-			keybinds[key] = keyval
-			list.add_item(key)
-			if typeof(keyval) == TYPE_STRING:
-				print("Loaded bind '" + key + " = " + keyval + "'")
-				list.add_item(keyval, null, false)
-			else:
-				print("Loaded bind '" + key + " = " + OS.get_scancode_string(keyval) + "'")
-				list.add_item(OS.get_scancode_string(keyval), null, false)
-	else:
-		print("Config file not located, generating new.")
+	for key in globals.settingsConfig.get_section_keys("keybinds"):
+		var keyval = globals.settingsConfig.get_value("keybinds", key)
+		keybinds[key] = keyval
+		list.add_item(key)
+		if typeof(keyval) == TYPE_STRING:
+			print("Loaded bind '" + key + " = " + keyval + "'")
+			list.add_item(keyval, null, false)
+		else:
+			print("Loaded bind '" + key + " = " + OS.get_scancode_string(keyval) + "'")
+			list.add_item(OS.get_scancode_string(keyval), null, false)
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -62,18 +58,13 @@ func _on_b_reset_pressed():
 
 
 func _on_b_save_pressed():
-	var config = File.new()
-	if config.open(globals.get_binding_config_path(), File.WRITE) != 0:
-		print("Error loading config at " + globals.get_binding_config_path())
-	else:
-		config.store_line("[keybinds]")
 		var i = 2
 		while i < list.get_item_count():
-			config.store_line(list.get_item_text(i) + "=" + str(OS.find_scancode_from_string(list.get_item_text(i + 1))))
+			var key = list.get_item_text(i)
+			var value = OS.find_scancode_from_string(list.get_item_text(i + 1))
+			globals.settingsConfig.set_value("keybinds", key, value)
 			i += 2
-		print("Config saved.")
-		config.close()
-
+		globals.save_config()
 
 func _on_request_binding_popup_hide():
 	b_bind.disabled = false

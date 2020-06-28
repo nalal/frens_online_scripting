@@ -1,10 +1,14 @@
 extends Node
 
 #path list
-onready var config_path = "configs"
-onready var custom_path = "custom_data"
-onready var binding_config_file_path = config_path + "/bindings.ini"
+const config_path = "configs"
+const custom_path = "custom_data"
+# onready var binding_config_file_path = config_path + "/bindings.ini"
+const settings_config_file_path = config_path + "/settings.ini"
 
+# Configuration Files
+onready var settingsConfig = ConfigFile.new()
+onready var configMissing = false
 #global variable list
 onready var config_data
 onready var g_name
@@ -93,8 +97,8 @@ func get_render_distance():
 
 var keybinds = {}
 
-func get_binding_config_path():
-	return binding_config_file_path
+func get_settings_config_file_path():
+	return settings_config_file_path
 
 func check_all_filesystems():
 	check_filesystem(config_path)
@@ -109,22 +113,75 @@ func check_filesystem(path):
 	pass
 
 func load_configs():
-	load_binds_config()
+	var err = settingsConfig.load(settings_config_file_path)
+	if err != OK:
+		configMissing = true
+	# load_binds_config()
+	process_Config()
 
-func load_binds_config():
-	config_data = ConfigFile.new()
-	if config_data.load(binding_config_file_path) == OK:
-		for key in config_data.get_section_keys("keybinds"):
-			var keyval = config_data.get_value("keybinds", key)
+# func load_binds_config():
+# 	config_data = ConfigFile.new()
+# 	if config_data.load(binding_config_file_path) == OK:
+# 		for key in config_data.get_section_keys("keybinds"):
+# 			var keyval = config_data.get_value("keybinds", key)
+# 			if typeof(keyval) != TYPE_STRING:
+# 				print("Loaded bind '" + key + " = " + OS.get_scancode_string(keyval) + "'")
+# 			else:
+# 				print("Loaded bind '" + key + " = " + keyval + "'")
+# 			keybinds[key] = keyval
+# 	else:
+# 		print("Config file not located, generating new.")
+# 		generate_binding_config()
+# 	set_binds()
+
+# func loadAll_Settings():
+
+
+func process_Config():
+	# var configMissing = false
+	var keybind_template = {
+		action_boop = 81,
+		move_forward = 87,
+		move_back = 83,
+		move_left = 65,
+		move_right = 68,
+		move_crouch = 16777238,
+		chat_enter = 16777221,
+		move_camera_lock = 90,
+		move_jump = 32,
+		move_fly = 86,
+		move_reset_cam = 67
+	}
+	var video_template = {
+		render_distance = 100
+	}
+	# var keybindKeysArray = Array(keybind_template.keys())
+	# var keybindKeysValues = Array(keybind_template.values())
+	# var err = settingsConfig.load(settings_config_file_path)
+	for keybind in Array(keybind_template.keys()):
+		var bindExists = settingsConfig.has_section_key("keybinds", keybind)
+		var keyval
+		if bindExists:
+			keyval = settingsConfig.get_value("keybinds", keybind)
+		else: 
+			keyval = keybind_template[keybind]
+
 			if typeof(keyval) != TYPE_STRING:
-				print("Loaded bind '" + key + " = " + OS.get_scancode_string(keyval) + "'")
-			else:
-				print("Loaded bind '" + key + " = " + keyval + "'")
-			keybinds[key] = keyval
+			print("Loaded bind '" + keybind + " = " + OS.get_scancode_string(keyval) + "'")
 	else:
-		print("Config file not located, generating new.")
-		generate_binding_config()
+			print("Loaded bind '" + keybind + " = " + keyval + "'")
+			keybinds[keybind] = keyval
+			if configMissing:
+				print("We can see configMissing")
+				save_config()
+		
 	set_binds()
+
+func save_config():
+	print("saving config")
+	var err = settingsConfig.save(settings_config_file_path)
+	if err != OK:
+		print("We couldnt save?, Error:", err)
 
 func set_binds():
 	for key in keybinds.keys():
@@ -210,11 +267,11 @@ func get_current_level():
 	return current_level
 
 #yes it's hideous but it doesn't read from pck packaged text files
-var bindings_template = "[keybinds]\naction_boop=81\nmove_forward=87\nmove_back=83\nmove_left=65\nmove_right=68\nmove_crouch=16777238\nchat_enter=16777221\nmove_camera_lock=90\nmove_jump=32\nmove_fly=86\nmove_reset_cam=67\n[video]\nrender_distance=100"
-func generate_binding_config():
-	print("Generating default config for '" + binding_config_file_path + "'.")
-	var file = File.new()
-	file.open(binding_config_file_path, File.WRITE)
-	file.store_string(bindings_template)
-	file.close()
-	print("Writing template.")
+# var bindings_template = "[keybinds]\naction_boop=81\nmove_forward=87\nmove_back=83\nmove_left=65\nmove_right=68\nmove_crouch=16777238\nchat_enter=16777221\nmove_camera_lock=90\nmove_jump=32\nmove_fly=86\nmove_reset_cam=67\n[video]\nrender_distance=100"
+# func generate_binding_config():
+# 	print("Generating default config for '" + settings_config_file_path + "'.")
+# 	var file = File.new()
+# 	file.open(settings_config_file_path, File.WRITE)
+# 	file.store_string(bindings_template)
+# 	file.close()
+# 	print("Writing template.")

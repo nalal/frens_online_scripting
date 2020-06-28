@@ -18,7 +18,7 @@ func _ready():
 	list.add_item("Action", null, false)
 	list.add_item("Key", null, false)
 	var config_data = ConfigFile.new()
-	if config_data.load(globals.get_binding_config_path()) == OK:
+	if config_data.load(globals.get_settings_config_file_path()) == OK:
 		for key in config_data.get_section_keys("keybinds"):
 			var keyval = config_data.get_value("keybinds", key)
 			keybinds[key] = keyval
@@ -63,8 +63,8 @@ func _on_b_reset_pressed():
 
 func _on_b_save_pressed():
 	var config = File.new()
-	if config.open(globals.get_binding_config_path(), File.WRITE) != 0:
-		print("Error loading config at " + globals.get_binding_config_path())
+	if config.open(globals.settings_config_file_path(), File.WRITE) != 0:
+		print("Error loading config at " + globals.settings_config_file_path())
 	else:
 		config.store_line("[keybinds]")
 		var i = 2

@@ -51,6 +51,12 @@ func _ready():
 	load_configs()
 	load_models()
 
+func get_render_scale():
+	return settingsConfig.get_value("graphics", "render_ui_scale")
+
+func get_res():
+	return [settingsConfig.get_value("graphics", "render_width"), settingsConfig.get_value("graphics", "render_height")]
+
 func set_p_scale(scale):
 	p_scale = scale
 
@@ -135,7 +141,10 @@ func process_Config():
 		move_reset_cam = 67
 	}
 	var graphics_template = {
-		render_distance = 100
+		render_distance = 100,
+		render_width = 1920,
+		render_height = 1080,
+		render_ui_scale = 1.0
 	}
 
 	for keybind in Array(keybind_template.keys()):
@@ -159,13 +168,13 @@ func process_Config():
 	for gSettings in Array(graphics_template.keys()):
 		var settingExists = settingsConfig.has_section_key("graphics", gSettings)
 		var val
-		
+
 		if settingExists:
 			val = settingsConfig.get_value("graphics", gSettings)
 		else:
 			val = graphics_template[gSettings]
 			settingsConfig.set_value("graphics", gSettings, val)
-		
+
 		print("Set '", gSettings, "' to ", val)
 	if configMissing:
 		print("Configfile missing, Will be generated.")
@@ -177,8 +186,8 @@ func save_config():
 	var err
 	err = settingsConfig.save(settings_config_file_path)
 	if err != OK:
-		print("We couldnt save?, Error:", err)
-		
+		print("We couldnt save? Error:", err)
+
 	err = settingsConfig.load(settings_config_file_path)
 	if err != OK:
 		print("We just saved and cant load it again??")

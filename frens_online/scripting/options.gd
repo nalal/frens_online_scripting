@@ -4,16 +4,21 @@ extends Control
 
 onready var binding_list = $pu_binding_list
 onready var le_render_dist = $le_render_dist
+onready var le_ui_scale = $le_uiscale
 
 func _ready():
 	for key in globals.settingsConfig.get_section_keys("graphics"):
 		var keyval = globals.settingsConfig.get_value("graphics", key)
 		# This can be extented if we have an array of all expected settings - Phoenix
-		if key == "render_distance":
-			if typeof(keyval) == TYPE_INT:
-				le_render_dist.text = str(keyval)
-			else:
-				print("Render distance set to incorrect value type")
+		match key:
+			"render_distance":
+				if typeof(keyval) == TYPE_INT:
+					le_render_dist.text = str(keyval)
+				else:
+					print("Render distance set to incorrect value type")
+			"render_ui_scale":
+				le_ui_scale.text = str(keyval)
+
 
 #open bindings menu
 func _on_b_bindings_pressed():
@@ -30,6 +35,8 @@ func _on_b_save_pressed():
 	if le_render_dist.text.is_valid_integer():
 		globals.set_render_distance(int(le_render_dist.text))
 		globals.settingsConfig.set_value("graphics", "render_distance", int(le_render_dist.text))
+		globals.set_render_distance(int(le_ui_scale.text))
+		globals.settingsConfig.set_value("graphics", "render_ui_scale", float(le_ui_scale.text))
 		globals.save_config()
 	else:
 		print("Render Distance must be an number.")

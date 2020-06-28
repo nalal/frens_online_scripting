@@ -41,14 +41,29 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="l_uis" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -85.0
+margin_top = 53.0
+margin_right = 18.0
+margin_bottom = 67.0
+text = "UI scale X"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="b_bindings" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -33.5
+margin_left = -41.5
 margin_top = -10.0
-margin_right = 33.5
+margin_right = 41.5
 margin_bottom = 10.0
 text = "Bindings"
 __meta__ = {
@@ -60,10 +75,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -33.5
-margin_top = 51.0
-margin_right = 33.5
-margin_bottom = 71.0
+margin_left = -41.5
+margin_top = 80.0
+margin_right = 41.5
+margin_bottom = 100.0
 text = "Save"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -80,7 +95,7 @@ margin_right = 156.5
 margin_bottom = 188.0
 
 [node name="b_back" type="Button" parent="."]
-margin_right = 12.0
+margin_right = 83.0
 margin_bottom = 20.0
 text = "Main Menu"
 
@@ -93,6 +108,22 @@ margin_left = 22.0
 margin_top = 17.0
 margin_right = 80.0
 margin_bottom = 41.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_uiscale" type="LineEdit" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 22.0
+margin_top = 47.0
+margin_right = 80.0
+margin_bottom = 71.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="b_bindings" to="." method="_on_b_bindings_pressed"]
 [connection signal="pressed" from="b_save" to="." method="_on_b_save_pressed"]
 [connection signal="pressed" from="b_back" to="." method="_on_b_back_pressed"]

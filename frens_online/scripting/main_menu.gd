@@ -14,6 +14,7 @@ const menu_text = [
 	"A melting pot of tolerance.",
 	"WE'RE ALL GONNA MAKE IT BROS",
 	"Twilight sparkle is best pony",
+	"7 bit signed ascii is retarded...",
 	"*crack* ALRIGHT, so...",
 	"Shoutout to Hoodie",
 	"/)",
@@ -26,6 +27,8 @@ const menu_text = [
 	"Go to bed, seth",
 	"IWTCIRD",
 	">when mom finds the jar",
+	"Put me in the cap",
+	"ZOOMED WORDS",
 	">no hooves",
 	"Fucking glimmershits...",
 	"The ride never ends.",
@@ -57,10 +60,14 @@ const menu_text = [
 	"What would the cutie mark of somepony who's talent is arguing even look like?",
 	"(USER WAS BANNED FOR THIS POST)",
 	"The kirin is offering you a drink",
+	"This, but with nyx",
 	"h e h"
 ]
 
 func _ready():
+	var res = globals.get_res()
+	#_set_size(Vector2(res[0],res[1]))
+	get_tree().set_screen_stretch(1, 1, Vector2(res[0],res[1]), globals.settingsConfig.get_value("graphics", "render_ui_scale"))
 	if globals.is_kicked:
 		globals.is_kicked = false
 		message_box.call_message_box("Disconnected", globals.get_kick_message())

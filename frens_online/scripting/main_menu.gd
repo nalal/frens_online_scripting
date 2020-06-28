@@ -67,7 +67,7 @@ const menu_text = [
 func _ready():
 	var res = globals.get_res()
 	#_set_size(Vector2(res[0],res[1]))
-	get_tree().set_screen_stretch(1, 1, Vector2(res[0],res[1]), globals.settingsConfig.get_value("graphics", "render_ui_scale"))
+	get_tree().set_screen_stretch(1, 1, Vector2(res[0],res[1]), globals.settingsConfig.get_value("graphics", "ui_scale"))
 	if globals.is_kicked:
 		globals.is_kicked = false
 		message_box.call_message_box("Disconnected", globals.get_kick_message())

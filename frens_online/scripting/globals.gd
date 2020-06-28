@@ -144,7 +144,7 @@ func process_Config():
 		render_distance = 100,
 		render_width = 1920,
 		render_height = 1080,
-		render_ui_scale = 1.0
+		ui_scale = 1.0
 	}
 
 	for keybind in Array(keybind_template.keys()):

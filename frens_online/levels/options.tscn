@@ -26,36 +26,6 @@ margin_bottom = 14.0
 text = "Options"
 align = 1
 
-[node name="l_render" type="Label" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -85.5
-margin_top = 23.0
-margin_right = 17.5
-margin_bottom = 37.0
-text = "Render distance"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="l_uis" type="Label" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -85.0
-margin_top = 53.0
-margin_right = 18.0
-margin_bottom = 67.0
-text = "UI scale X"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="b_bindings" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -99,7 +69,26 @@ margin_right = 83.0
 margin_bottom = 20.0
 text = "Main Menu"
 
-[node name="le_render_dist" type="LineEdit" parent="."]
+[node name="Options" type="Node" parent="."]
+
+[node name="render_distance" type="Node" parent="Options"]
+
+[node name="l_render" type="Label" parent="Options/render_distance"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -85.5
+margin_top = 23.0
+margin_right = 17.5
+margin_bottom = 37.0
+text = "Render distance"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_render_dist" type="LineEdit" parent="Options/render_distance"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -112,7 +101,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="le_uiscale" type="LineEdit" parent="."]
+[node name="ui_scale" type="Node" parent="Options"]
+
+[node name="l_uis" type="Label" parent="Options/ui_scale"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -85.0
+margin_top = 53.0
+margin_right = 18.0
+margin_bottom = 67.0
+text = "UI scale X"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_uiscale" type="LineEdit" parent="Options/ui_scale"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5

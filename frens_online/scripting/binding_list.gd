@@ -28,6 +28,15 @@ func _ready():
 			print("Loaded bind '" + key + " = " + OS.get_scancode_string(keyval) + "'")
 			list.add_item(OS.get_scancode_string(keyval), null, false)
 
+func reload_keybinds():
+	for key in globals.settingsConfig.get_section_keys("keybinds"):
+		var keyval = globals.settingsConfig.get_value("keybinds", key)
+		keybinds[key] = keyval
+		if typeof(keyval) == TYPE_STRING:
+			print("Loaded bind '" + key + " = " + keyval + "'")
+		else:
+			print("Loaded bind '" + key + " = " + OS.get_scancode_string(keyval) + "'")
+
 func _input(event):
 	if event is InputEventMouseMotion:
 		pass
@@ -51,7 +60,7 @@ func _on_b_bind_pressed():
 func _on_b_clear_pressed():
 	var index = list.get_selected_items()
 	if index.size() > 0:
-		list.set_item_text(index[0] + 1, "undbound")
+		list.set_item_text(index[0] + 1, "unbound")
 
 func _on_b_reset_pressed():
 	pass 
@@ -65,6 +74,8 @@ func _on_b_save_pressed():
 			globals.settingsConfig.set_value("keybinds", key, value)
 			i += 2
 		globals.save_config()
+		print("Reloading Keybinds")
+		reload_keybinds()
 
 func _on_request_binding_popup_hide():
 	b_bind.disabled = false

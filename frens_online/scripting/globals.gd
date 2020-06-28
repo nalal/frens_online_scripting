@@ -4,11 +4,12 @@ extends Node
 const config_path = "configs"
 const custom_path = "custom_data"
 # onready var binding_config_file_path = config_path + "/bindings.ini"
-const settings_config_file_path = config_path + "/settings.ini"
+onready var settings_config_file_path = config_path + "/settings.ini"
 
 # Configuration Files
 onready var settingsConfig = ConfigFile.new()
 onready var configMissing = false
+
 #global variable list
 onready var config_data
 onready var g_name
@@ -116,26 +117,7 @@ func load_configs():
 	var err = settingsConfig.load(settings_config_file_path)
 	if err != OK:
 		configMissing = true
-	# load_binds_config()
 	process_Config()
-
-# func load_binds_config():
-# 	config_data = ConfigFile.new()
-# 	if config_data.load(binding_config_file_path) == OK:
-# 		for key in config_data.get_section_keys("keybinds"):
-# 			var keyval = config_data.get_value("keybinds", key)
-# 			if typeof(keyval) != TYPE_STRING:
-# 				print("Loaded bind '" + key + " = " + OS.get_scancode_string(keyval) + "'")
-# 			else:
-# 				print("Loaded bind '" + key + " = " + keyval + "'")
-# 			keybinds[key] = keyval
-# 	else:
-# 		print("Config file not located, generating new.")
-# 		generate_binding_config()
-# 	set_binds()
-
-# func loadAll_Settings():
-
 
 func process_Config():
 	# var configMissing = false
@@ -155,33 +137,41 @@ func process_Config():
 	var video_template = {
 		render_distance = 100
 	}
-	# var keybindKeysArray = Array(keybind_template.keys())
-	# var keybindKeysValues = Array(keybind_template.values())
-	# var err = settingsConfig.load(settings_config_file_path)
+
 	for keybind in Array(keybind_template.keys()):
 		var bindExists = settingsConfig.has_section_key("keybinds", keybind)
 		var keyval
 		if bindExists:
 			keyval = settingsConfig.get_value("keybinds", keybind)
+			# TODO: Mark there to show on DEBUG MODE ONLY
+			print("Setting '", keybind, "' to '", keyval, "' From configuration")
 		else: 
 			keyval = keybind_template[keybind]
+			settingsConfig.set_value("keybinds", keybind, keyval)
+			# TODO: Mark there to show on DEBUG MODE ONLY
+			print("Setting ", keybind, "to", keyval, "From default")
 
-			if typeof(keyval) != TYPE_STRING:
+		if typeof(keyval) != TYPE_STRING:
 			print("Loaded bind '" + keybind + " = " + OS.get_scancode_string(keyval) + "'")
-	else:
+		else:
 			print("Loaded bind '" + keybind + " = " + keyval + "'")
 			keybinds[keybind] = keyval
-			if configMissing:
-				print("We can see configMissing")
-				save_config()
 		
-	set_binds()
+	if configMissing:
+		print("Configfile missing, Will be generated.")
+		save_config()
+		
 
 func save_config():
-	print("saving config")
-	var err = settingsConfig.save(settings_config_file_path)
+	print("Saving config.")
+	var err
+	err = settingsConfig.save(settings_config_file_path)
 	if err != OK:
 		print("We couldnt save?, Error:", err)
+		
+	err = settingsConfig.load(settings_config_file_path)
+	if err != OK:
+		print("We just saved and cant load it again??")
 
 func set_binds():
 	for key in keybinds.keys():

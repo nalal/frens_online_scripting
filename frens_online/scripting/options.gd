@@ -7,7 +7,7 @@ onready var le_render_dist = $le_render_dist
 
 func _ready():
 	var config_data = ConfigFile.new()
-	if config_data.load(globals.get_binding_config_path()) == OK:
+	if config_data.load(globals.get_settings_config_file_path()) == OK:
 		for key in config_data.get_section_keys("video"):
 			var keyval = config_data.get_value("video", key)
 			if key == "render_distance":
@@ -32,4 +32,4 @@ func _on_b_save_pressed():
 	if le_render_dist.text.is_valid_integer():
 		globals.set_render_distance(int(le_render_dist.text))
 #	var config_data = ConfigFile.new()
-#	if config_data.load(globals.get_binding_config_path()) == OK:
+#	if config_data.load(globals.get_settings_config_file_path()) == OK:

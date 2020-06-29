@@ -181,6 +181,10 @@ func process_Config():
 		save_config()
 		
 
+func update_video_settings():
+		var res = get_res()
+		get_tree().set_screen_stretch(1, 1, Vector2(res[0],res[1]), settingsConfig.get_value("graphics", "ui_scale"))
+
 func save_config():
 	print("Saving config.")
 	var err

@@ -42,7 +42,12 @@ func _on_b_save_pressed():
 				"render_distance":
 					globals.set_render_distance(int(optionValue))
 					globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
+				"render_width":
+					globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
+				"render_height":
+					globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
 				_:
 					globals.settingsConfig.set_value("graphics", optionName, float(optionValue))
 
 	globals.save_config()
+	globals.update_video_settings()

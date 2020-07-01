@@ -170,5 +170,7 @@ quality/reflections/texture_array_reflections=false
 quality/reflections/high_quality_ggx=false
 quality/shading/force_lambert_over_burley=true
 quality/depth_prepass/enable=false
+quality/subsurface_scattering/quality=0
+quality/subsurface_scattering/scale=0
 quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"

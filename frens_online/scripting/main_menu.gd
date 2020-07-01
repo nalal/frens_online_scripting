@@ -65,6 +65,8 @@ const menu_text = [
 ]
 
 func _ready():
+	#globals.update_project_config("application/run/frame_delay_msec", 1)
+	#globals.save_project_config()
 	var res = globals.get_res()
 	#_set_size(Vector2(res[0],res[1]))
 	get_tree().set_screen_stretch(1, 1, Vector2(res[0],res[1]), globals.settingsConfig.get_value("graphics", "ui_scale"))

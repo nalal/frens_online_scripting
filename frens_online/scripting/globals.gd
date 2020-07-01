@@ -144,7 +144,8 @@ func process_Config():
 		render_distance = 100,
 		render_width = 1920,
 		render_height = 1080,
-		ui_scale = 1.0
+		ui_scale = 1.0,
+		framerate = 60
 	}
 
 	for keybind in Array(keybind_template.keys()):
@@ -179,7 +180,28 @@ func process_Config():
 	if configMissing:
 		print("Configfile missing, Will be generated.")
 		save_config()
-		
+
+func update_project_config(setting, value):
+	print("Changing setting '" + setting + "' from '" +str(ProjectSettings.get_setting(setting)) + "' to '" + str(value) + "'")
+	ProjectSettings.set_setting(setting, value)
+
+func save_project_config():
+	ProjectSettings.save()
+	var file = File.new()
+	match file.file_exists("override.cfg"):
+		true:
+			var dir = Directory.new()
+			dir.open(".")
+			dir.remove("./override.cfg")
+	file.open("project.godot", File.READ)
+	var project_config_data = file.get_as_text() 
+	file.close()
+	file.open("override.cfg", File.WRITE)
+	file.store_line(project_config_data)
+	file.close()
+	var proj = Directory.new()
+	proj.open(".")
+	proj.remove("./project.godot")
 
 func update_video_settings():
 		var res = get_res()

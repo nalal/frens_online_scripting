@@ -49,8 +49,12 @@ func _on_b_save_pressed():
 				"render_height":
 					globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
 				"framerate":
-					globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
-					globals.update_project_config("application/run/frame_delay_msec", int(round(1000 / float(optionValue))))
+					if int(optionValue) == 0:
+						globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
+						globals.update_project_config("application/run/frame_delay_msec", int(optionValue))
+					else:
+						globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
+						globals.update_project_config("application/run/frame_delay_msec", int(round(1000 / float(optionValue))))
 					update_p_config = true
 				_:
 					globals.settingsConfig.set_value("graphics", optionName, float(optionValue))

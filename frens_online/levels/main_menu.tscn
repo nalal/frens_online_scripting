@@ -30,63 +30,46 @@ margin_bottom = 14.0
 text = "Horse Videogame"
 align = 1
 
-[node name="Control" type="Control" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -20.0
-margin_top = -20.0
-margin_right = 20.0
-margin_bottom = 20.0
-
-[node name="b_play" type="Button" parent="Control"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -32.0
-margin_top = -20.0
-margin_right = 32.0
-text = "Connect"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="b_customize" type="Button" parent="Control"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -40.0
-margin_top = 35.0
-margin_right = 40.0
-margin_bottom = 55.0
-text = "Customize"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="b_options" type="Button" parent="Control"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -31.5
-margin_top = 8.06836
-margin_right = 31.5
-margin_bottom = 28.0684
-text = "Options"
-
-[node name="b_local" type="Button" parent="Control"]
+[node name="vb_menu" type="VBoxContainer" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -42.5
-margin_top = -47.0
+margin_top = -46.0
 margin_right = 42.5
-margin_bottom = -27.0
+margin_bottom = 46.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_play" type="Button" parent="vb_menu"]
+margin_right = 85.0
+margin_bottom = 20.0
+text = "Connect"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_customize" type="Button" parent="vb_menu"]
+margin_top = 24.0
+margin_right = 85.0
+margin_bottom = 44.0
+text = "Customize"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="b_options" type="Button" parent="vb_menu"]
+margin_top = 48.0
+margin_right = 85.0
+margin_bottom = 68.0
+text = "Options"
+
+[node name="b_local" type="Button" parent="vb_menu"]
+margin_top = 72.0
+margin_right = 85.0
+margin_bottom = 92.0
 text = "Play Offline"
 
 [node name="name_enter_dialog" type="WindowDialog" parent="."]
@@ -145,6 +128,14 @@ margin_right = 127.0
 margin_bottom = -50.0
 text = "Please enter a user name and password"
 align = 1
+
+[node name="l_error" type="Label" parent="name_enter_dialog"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = -24.0
+margin_right = 50.0
+margin_bottom = -10.0
 
 [node name="ctb_name_error_message" parent="." instance=ExtResource( 3 )]
 visible = false
@@ -234,7 +225,7 @@ text = "Nac/Anon/PictureNotAvailable:
 -Creator and Developer for \"Frens Online\"
 
 Hotaru:
--Server application developer for \"Frens Online\"
+-Developer for \"Frens Online\"
 
 RodZill4:
 -Developer of \"Material Maker\""
@@ -254,7 +245,6 @@ margin_bottom = 113.0
 text = "Close"
 
 [node name="wd_customize" parent="." instance=ExtResource( 5 )]
-visible = false
 
 [node name="l_menu_flavor_text" type="Label" parent="."]
 anchor_top = 1.0
@@ -264,10 +254,10 @@ margin_right = 70.0
 margin_bottom = -29.9999
 rect_scale = Vector2( 3.026, 3.408 )
 text = "H O R S E S"
-[connection signal="pressed" from="Control/b_play" to="." method="_on_Play_pressed"]
-[connection signal="pressed" from="Control/b_customize" to="." method="_on_b_customize_pressed"]
-[connection signal="pressed" from="Control/b_options" to="." method="_on_Button_pressed"]
-[connection signal="pressed" from="Control/b_local" to="." method="_on_b_local_pressed"]
+[connection signal="pressed" from="vb_menu/b_play" to="." method="_on_Play_pressed"]
+[connection signal="pressed" from="vb_menu/b_customize" to="." method="_on_b_customize_pressed"]
+[connection signal="pressed" from="vb_menu/b_options" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="vb_menu/b_local" to="." method="_on_b_local_pressed"]
 [connection signal="pressed" from="name_enter_dialog/b_enter_name" to="." method="_on_b_enter_name_pressed"]
 [connection signal="pressed" from="connection_dialog/b_enter_ip" to="." method="_on_b_enter_ip_pressed"]
 [connection signal="pressed" from="b_credits" to="." method="_on_b_credits_pressed"]

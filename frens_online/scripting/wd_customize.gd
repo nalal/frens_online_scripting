@@ -34,28 +34,34 @@ func _ready():
 	model_render_port.set_size(vc_model_view.get_size())
 
 func _physics_process(delta):
-	match loaded_model:
-		null:
-			return
-	match customizer_box:
-		null:
-			return
-	for f in flags:
-		match f:
-			enums.M_ASSET_FLAGS.COLOR:
-				set_color()
-			enums.M_ASSET_FLAGS.TOGGLE:
-				set_visibility()
-	return
+	pass
 
+#Load new color on mouse click or release
+func _input(event):
+	if Input.is_action_just_pressed("ui_click") || Input.is_action_just_released("ui_click"):
+		match loaded_model:
+			null:
+				return
+		match customizer_box:
+			null:
+				return
+		for f in flags:
+			match f:
+				enums.M_ASSET_FLAGS.COLOR:
+					set_color()
+				enums.M_ASSET_FLAGS.TOGGLE:
+					set_visibility()
+		return
+
+#Get color from buffer and set part(s) as color 
 func set_color():
 	match cur_color:
 		null:
 			cur_color = customizer_box.color_selected
-			return
 	loaded_model.set_part_color(customizer_box.get_window_name(), cur_color)
 	cur_color = null
 
+#Get toggle buffer and set part as buffer
 func set_visibility():
 	match cur_visible:
 		null:
@@ -64,9 +70,9 @@ func set_visibility():
 	loaded_model.set_part_visibility(customizer_box.get_window_name(), customizer_box.get_render_toggle())
 	cur_color = null
 
+#Load models from list
 func _on_b_open_model_list_pressed():
 	rtl_model_list.show()
-
 
 func _on_rtl_model_list_item_selected(index):
 	for m in models_list:
@@ -95,21 +101,6 @@ func load_buttons():
 			return
 	templates = saved_templates
 	b_load.set_disabled(false)
-
-
-#func load_controls():
-#	var assets = loaded_model.get_assets()
-#	for a in assets:
-#		var setting_box = load("res://assets/model_customize_item.tscn").instance()
-#		setting_box.set_name(a.asset_id + "_box")
-#		vbc_boxes.add_child(setting_box, true)
-#		var added_box = vbc_boxes.get_node(a.asset_id + "_box")
-#		added_box.set_render_flags(a.asset_flags)
-#		added_box.rect_min_size = sc_options_list.get_size()
-#		var len_add = added_box.get_length()
-#		var new_size = vbc_boxes.get_size()
-#		new_size.y = new_size.y + len_add.y
-#		vbc_boxes._set_size(new_size)
 
 #check if customization window exists, if does then close
 func clear_box_buffer():
@@ -146,6 +137,7 @@ func _on_wd_customize_hide():
 		loaded_model.get_parent().remove_child(loaded_model)
 	get_parent().remove_child(self)
 
+#Custom asset part info
 var custom_save ={
 	"asset_id" : "",
 	"asset_color" : "",
@@ -153,15 +145,15 @@ var custom_save ={
 	"asset_flags" : []
 }
 
+#Model customization template
 var model_template = {
 	"template_name" : "",
 	"settings" : []
 }
 
+#Open save prompt
 func _on_b_save_pressed():
 	wd_save.show()
-
-
 
 func _on_b_save_name_pressed():
 	match le_name.text.length():
@@ -200,6 +192,7 @@ func _on_b_save_name_pressed():
 	wd_save.hide()
 #	data.test_save(loaded_model.get_name())
 
+#Load template from file data
 func load_template(template):
 	for t in template["settings"]:
 		#globals.get_networking_node().send_player_model_data(t)
@@ -212,12 +205,10 @@ func load_template(template):
 					loaded_model.set_part_visibility(t["asset_id"], t["asset_visible"])
 		print(t)
 
-
 func _on_b_load_pressed():
 	wd_load.show()
 	for t in templates["templates"]:
 		il_templates.add_item(t["template_name"])
-
 
 func _on_b_load_name_pressed():
 	for t in templates["templates"]:
@@ -225,7 +216,6 @@ func _on_b_load_name_pressed():
 			load_template(t)
 	wd_load.hide()
 	pass # Replace with function body.
-
 
 func _on_il_templates_item_selected(index):
 	selected_load = index

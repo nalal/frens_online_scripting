@@ -21,9 +21,11 @@ config/use_custom_user_dir=true
 config/custom_user_dir_name="frens_online"
 run/frame_delay_msec=17
 config/icon="res://icon.png"
+config/version="v0.1.1"
 
 [autoload]
 
+Info="*res://scripting/info.gd"
 signals="*res://scripting/signals.gd"
 gameinit="*res://scripting/game_init.gd"
 globals="*res://scripting/globals.gd"
@@ -38,8 +40,8 @@ http_handler="*res://scripting/http_handler.tscn"
 window/size/width=1920
 window/size/height=1080
 window/vsync/use_vsync=false
-window/stretch/mode="viewport"
-window/stretch/aspect="keep"
+window/stretch/mode="2d"
+window/stretch/aspect="expand"
 
 [editor_plugins]
 
@@ -144,6 +146,15 @@ cam_perspective_toggle={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":70,"unicode":0,"echo":false,"script":null)
  ]
 }
+ui_click={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
+
+[logging]
+
+file_logging/enable_file_logging=true
 
 [physics]
 
@@ -159,5 +170,7 @@ quality/reflections/texture_array_reflections=false
 quality/reflections/high_quality_ggx=false
 quality/shading/force_lambert_over_burley=true
 quality/depth_prepass/enable=false
+quality/subsurface_scattering/quality=0
+quality/subsurface_scattering/scale=0
 quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"

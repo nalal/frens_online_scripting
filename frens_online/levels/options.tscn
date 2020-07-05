@@ -26,44 +26,43 @@ margin_bottom = 14.0
 text = "Options"
 align = 1
 
-[node name="l_render" type="Label" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -85.5
-margin_top = 23.0
-margin_right = 17.5
-margin_bottom = 37.0
-text = "Render distance"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="b_bindings" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -33.5
+margin_left = -41.5
 margin_top = -10.0
-margin_right = 33.5
+margin_right = 41.5
 margin_bottom = 10.0
 text = "Bindings"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="l_update_message" type="Label" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -189.5
+margin_top = -37.0
+margin_right = 189.5
+margin_bottom = -23.0
+text = "You must restart the game for some changes to take effect."
+align = 1
+valign = 1
+
 [node name="b_save" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -33.5
-margin_top = 51.0
-margin_right = 33.5
-margin_bottom = 71.0
+margin_left = -41.5
+margin_top = 170.0
+margin_right = 41.5
+margin_bottom = 190.0
 text = "Save"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -80,11 +79,30 @@ margin_right = 156.5
 margin_bottom = 188.0
 
 [node name="b_back" type="Button" parent="."]
-margin_right = 12.0
+margin_right = 83.0
 margin_bottom = 20.0
 text = "Main Menu"
 
-[node name="le_render_dist" type="LineEdit" parent="."]
+[node name="Options" type="Node" parent="."]
+
+[node name="render_distance" type="Node" parent="Options"]
+
+[node name="l_render" type="Label" parent="Options/render_distance"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -85.5
+margin_top = 23.0
+margin_right = 17.5
+margin_bottom = 37.0
+text = "Render distance"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_render_dist" type="LineEdit" parent="Options/render_distance"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -93,6 +111,129 @@ margin_left = 22.0
 margin_top = 17.0
 margin_right = 80.0
 margin_bottom = 41.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="framerate" type="Node" parent="Options"]
+
+[node name="l_framerate" type="Label" parent="Options/framerate"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -85.0
+margin_top = 141.0
+margin_right = 18.0
+margin_bottom = 155.0
+text = "Max FPS"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_framerate" type="LineEdit" parent="Options/framerate"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 22.0
+margin_top = 135.0
+margin_right = 80.0
+margin_bottom = 159.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="render_width" type="Node" parent="Options"]
+
+[node name="l_render_w" type="Label" parent="Options/render_width"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -85.5
+margin_top = 83.0
+margin_right = 17.5
+margin_bottom = 97.0
+text = "Screen width"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_render_width" type="LineEdit" parent="Options/render_width"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 22.0
+margin_top = 77.0
+margin_right = 80.0
+margin_bottom = 101.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="render_height" type="Node" parent="Options"]
+
+[node name="l_render_h" type="Label" parent="Options/render_height"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -85.0
+margin_top = 112.0
+margin_right = 18.0
+margin_bottom = 126.0
+text = "Screen height"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_render_height" type="LineEdit" parent="Options/render_height"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 22.0
+margin_top = 106.0
+margin_right = 80.0
+margin_bottom = 130.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ui_scale" type="Node" parent="Options"]
+
+[node name="l_uis" type="Label" parent="Options/ui_scale"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -85.0
+margin_top = 53.0
+margin_right = 18.0
+margin_bottom = 67.0
+text = "UI scale X"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="le_uiscale" type="LineEdit" parent="Options/ui_scale"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 22.0
+margin_top = 47.0
+margin_right = 80.0
+margin_bottom = 71.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="pressed" from="b_bindings" to="." method="_on_b_bindings_pressed"]
 [connection signal="pressed" from="b_save" to="." method="_on_b_save_pressed"]
 [connection signal="pressed" from="b_back" to="." method="_on_b_back_pressed"]

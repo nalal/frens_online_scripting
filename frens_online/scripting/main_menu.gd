@@ -9,10 +9,12 @@ onready var le_ip = $connection_dialog/le_ip
 onready var le_port = $connection_dialog/le_port
 onready var wd_credits = $wd_credits
 onready var l_menu_flavor_text = $l_menu_flavor_text
+onready var l_error_name = $name_enter_dialog/l_error
 const menu_text = [
 	"A melting pot of tolerance.",
 	"WE'RE ALL GONNA MAKE IT BROS",
 	"Twilight sparkle is best pony",
+	"7 bit signed ascii is retarded...",
 	"*crack* ALRIGHT, so...",
 	"Shoutout to Hoodie",
 	"/)",
@@ -25,6 +27,8 @@ const menu_text = [
 	"Go to bed, seth",
 	"IWTCIRD",
 	">when mom finds the jar",
+	"Put me in the cap",
+	"ZOOMED WORDS",
 	">no hooves",
 	"Fucking glimmershits...",
 	"The ride never ends.",
@@ -34,7 +38,7 @@ const menu_text = [
 	"You gotta try some of this bomb ass tea, man",
 	"If it's anthro, it gets the b&thro",
 	"FUCK camera collision",
-	"'With a car, you can go anywhere' he said out loud",
+	"'With a car, you can go anywhere you want' he said out loud",
 	"Wojak is just rageface 2.0 and posting wojak makes you look bad",
 	"Griffons did this...",
 	"DANCE ON ME BALLS, CAT FUCKING A HANDBAG",
@@ -56,10 +60,16 @@ const menu_text = [
 	"What would the cutie mark of somepony who's talent is arguing even look like?",
 	"(USER WAS BANNED FOR THIS POST)",
 	"The kirin is offering you a drink",
+	"This, but with nyx",
 	"h e h"
 ]
 
 func _ready():
+	#globals.update_project_config("application/run/frame_delay_msec", 1)
+	#globals.save_project_config()
+	var res = globals.get_res()
+	#_set_size(Vector2(res[0],res[1]))
+	get_tree().set_screen_stretch(1, 1, Vector2(res[0],res[1]), globals.settingsConfig.get_value("graphics", "ui_scale"))
 	if globals.is_kicked:
 		globals.is_kicked = false
 		message_box.call_message_box("Disconnected", globals.get_kick_message())
@@ -84,17 +94,18 @@ func _on_b_enter_name_pressed():
 		if name_in.text.length() <= 25:
 			globals.set_name(name_in.text)
 			if pass_in.text.length() <= 0:
-				name_popup.hide()
-				message_box.call_message_box("ERROR", "Please provide a password.")
+				#name_popup.hide()
+				l_error_name.text = "Invalid password"
 			else:
 				globals.set_pass(pass_in.text)
+				l_error_name.text = ""
 				get_tree().change_scene("res://scripting/networking.tscn")
 		else:
-			name_popup.hide()
-			message_box.call_message_box("ERROR", "Name must be less than 25 characters long.")
+			#name_popup.hide()
+			l_error_name.text = "Name too long"
 	else:
-		name_popup.hide()
-		message_box.call_message_box("ERROR", "Please enter a name.")
+		#name_popup.hide()
+		l_error_name.text = "No name"
 
 #Offline mode button, does nothing atm
 func _on_b_local_pressed():

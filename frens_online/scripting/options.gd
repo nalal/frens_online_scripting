@@ -3,21 +3,22 @@ extends Control
 #options menu scripting
 
 onready var binding_list = $pu_binding_list
-onready var le_render_dist = $le_render_dist
+#onready var le_render_dist = $le_render_dist
+#onready var le_ui_scale = $le_uiscale
+onready var l_update_message = $l_update_message
+onready var optNode = get_node("Options")
+onready var OptionsArray = optNode.get_children()
 
 func _ready():
-	var config_data = ConfigFile.new()
-	if config_data.load(globals.get_binding_config_path()) == OK:
-		for key in config_data.get_section_keys("video"):
-			var keyval = config_data.get_value("video", key)
-			if key == "render_distance":
-				if typeof(keyval) == TYPE_INT:
-					le_render_dist.text = keyval
-				else:
-					print("Render distance set to incorrect value type, using default")
-					le_render_dist.text = globals.get_render_distance()
-	else:
-		print("Config file not located, generating new.")
+	for Options in OptionsArray:
+		var optionName = Options.get_name()
+		var optionValue
+		var optionArr = optNode.get_node(optionName).get_children()
+		for objType in optionArr:
+			match objType.get_class():
+				"LineEdit":
+					optionValue = globals.settingsConfig.get_value("graphics", optionName.to_lower())
+					objType.text = str(optionValue)
 
 #open bindings menu
 func _on_b_bindings_pressed():
@@ -29,7 +30,37 @@ func _on_b_back_pressed():
 
 
 func _on_b_save_pressed():
-	if le_render_dist.text.is_valid_integer():
-		globals.set_render_distance(int(le_render_dist.text))
-#	var config_data = ConfigFile.new()
-#	if config_data.load(globals.get_binding_config_path()) == OK:
+	for Options in OptionsArray:
+		var update_p_config = false
+		var optionName = Options.get_name()
+		var optionValue
+		var optionArr = optNode.get_node(optionName).get_children()
+		for objType in optionArr:
+			match objType.get_class():
+				"LineEdit":
+					optionValue = objType.text
+		if optionValue.is_valid_float():
+			match optionName:
+				"render_distance":
+					globals.set_render_distance(int(optionValue))
+					globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
+				"render_width":
+					globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
+				"render_height":
+					globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
+				"framerate":
+					if int(optionValue) == 0:
+						globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
+						globals.update_project_config("application/run/frame_delay_msec", int(optionValue))
+					else:
+						globals.settingsConfig.set_value("graphics", optionName, int(optionValue))
+						globals.update_project_config("application/run/frame_delay_msec", int(round(1000 / float(optionValue))))
+					update_p_config = true
+				_:
+					globals.settingsConfig.set_value("graphics", optionName, float(optionValue))
+		if update_p_config:
+			l_update_message.show()
+			globals.save_project_config()
+
+	globals.save_config()
+	globals.update_video_settings()

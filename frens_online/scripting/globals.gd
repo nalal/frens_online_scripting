@@ -1,9 +1,14 @@
 extends Node
 
 #path list
-onready var config_path = "configs"
-onready var custom_path = "custom_data"
-onready var binding_config_file_path = config_path + "/bindings.ini"
+const config_path = "configs"
+const custom_path = "custom_data"
+# onready var binding_config_file_path = config_path + "/bindings.ini"
+onready var settings_config_file_path = config_path + "/settings.ini"
+
+# Configuration Files
+onready var settingsConfig = ConfigFile.new()
+onready var configMissing = false
 
 #global variable list
 onready var config_data
@@ -45,6 +50,12 @@ func _ready():
 	check_all_filesystems()
 	load_configs()
 	load_models()
+
+func get_render_scale():
+	return settingsConfig.get_value("graphics", "render_ui_scale")
+
+func get_res():
+	return [settingsConfig.get_value("graphics", "render_width"), settingsConfig.get_value("graphics", "render_height")]
 
 func set_p_scale(scale):
 	p_scale = scale
@@ -93,8 +104,8 @@ func get_render_distance():
 
 var keybinds = {}
 
-func get_binding_config_path():
-	return binding_config_file_path
+func get_settings_config_file_path():
+	return settings_config_file_path
 
 func check_all_filesystems():
 	check_filesystem(config_path)
@@ -109,22 +120,105 @@ func check_filesystem(path):
 	pass
 
 func load_configs():
-	load_binds_config()
+	var err = settingsConfig.load(settings_config_file_path)
+	if err != OK:
+		configMissing = true
+	process_Config()
 
-func load_binds_config():
-	config_data = ConfigFile.new()
-	if config_data.load(binding_config_file_path) == OK:
-		for key in config_data.get_section_keys("keybinds"):
-			var keyval = config_data.get_value("keybinds", key)
-			if typeof(keyval) != TYPE_STRING:
-				print("Loaded bind '" + key + " = " + OS.get_scancode_string(keyval) + "'")
-			else:
-				print("Loaded bind '" + key + " = " + keyval + "'")
-			keybinds[key] = keyval
-	else:
-		print("Config file not located, generating new.")
-		generate_binding_config()
-	set_binds()
+func process_Config():
+	# var configMissing = false
+	var keybind_template = {
+		action_boop = 81,
+		move_forward = 87,
+		move_back = 83,
+		move_left = 65,
+		move_right = 68,
+		move_crouch = 16777238,
+		chat_enter = 16777221,
+		move_camera_lock = 90,
+		move_jump = 32,
+		move_fly = 86,
+		move_reset_cam = 67
+	}
+	var graphics_template = {
+		render_distance = 100,
+		render_width = 1920,
+		render_height = 1080,
+		ui_scale = 1.0,
+		framerate = 60
+	}
+
+	for keybind in Array(keybind_template.keys()):
+		var bindExists = settingsConfig.has_section_key("keybinds", keybind)
+		var keyval
+		if bindExists:
+			keyval = settingsConfig.get_value("keybinds", keybind)
+			# TODO: Mark these show on DEBUG MODE
+			#print("Setting '", keybind, "' to '", keyval, "' From configuration")
+		else: 
+			keyval = keybind_template[keybind]
+			settingsConfig.set_value("keybinds", keybind, keyval)
+			# TODO: Mark these show on DEBUG MODE
+			#print("Setting ", keybind, " to ", keyval, " From default")
+
+		if typeof(keyval) != TYPE_STRING:
+			print("Loaded bind '" + keybind + " = " + OS.get_scancode_string(keyval) + "'")
+		else:
+			print("Loaded bind '" + keybind + " = " + keyval + "'")
+			keybinds[keybind] = keyval
+	for gSettings in Array(graphics_template.keys()):
+		var settingExists = settingsConfig.has_section_key("graphics", gSettings)
+		var val
+
+		if settingExists:
+			val = settingsConfig.get_value("graphics", gSettings)
+		else:
+			val = graphics_template[gSettings]
+			settingsConfig.set_value("graphics", gSettings, val)
+
+		print("Set '", gSettings, "' to ", val)
+	if configMissing:
+		print("Configfile missing, Will be generated.")
+		save_config()
+
+func update_project_config(setting, value):
+	print("Changing setting '" + setting + "' from '" +str(ProjectSettings.get_setting(setting)) + "' to '" + str(value) + "'")
+	ProjectSettings.set_setting(setting, value)
+
+func save_project_config():
+	ProjectSettings.save()
+	var file = File.new()
+	match file.file_exists("override.cfg"):
+		true:
+			var dir = Directory.new()
+			dir.open(".")
+			dir.remove("./override.cfg")
+	file.open("project.godot", File.READ)
+	var project_config_data = file.get_as_text() 
+	file.close()
+	file.open("override.cfg", File.WRITE)
+	file.store_line(project_config_data)
+	file.close()
+	var proj = Directory.new()
+	proj.open(".")
+	proj.remove("./project.godot")
+
+func update_video_settings():
+		var res = get_res()
+		get_tree().set_screen_stretch(1, 1, Vector2(res[0],res[1]), settingsConfig.get_value("graphics", "ui_scale"))
+
+func save_config():
+	print("Saving config.")
+	var err
+	err = settingsConfig.save(settings_config_file_path)
+	if err != OK:
+		print("We couldnt save? Error:", err)
+
+	err = settingsConfig.load(settings_config_file_path)
+	if err != OK:
+		print("We just saved and cant load it again??")
+	if err == OK:
+		print("Saved Config.")
 
 func set_binds():
 	for key in keybinds.keys():
@@ -210,11 +304,11 @@ func get_current_level():
 	return current_level
 
 #yes it's hideous but it doesn't read from pck packaged text files
-var bindings_template = "[keybinds]\naction_boop=81\nmove_forward=87\nmove_back=83\nmove_left=65\nmove_right=68\nmove_crouch=16777238\nchat_enter=16777221\nmove_camera_lock=90\nmove_jump=32\nmove_fly=86\nmove_reset_cam=67\n[video]\nrender_distance=100"
-func generate_binding_config():
-	print("Generating default config for '" + binding_config_file_path + "'.")
-	var file = File.new()
-	file.open(binding_config_file_path, File.WRITE)
-	file.store_string(bindings_template)
-	file.close()
-	print("Writing template.")
+# var bindings_template = "[keybinds]\naction_boop=81\nmove_forward=87\nmove_back=83\nmove_left=65\nmove_right=68\nmove_crouch=16777238\nchat_enter=16777221\nmove_camera_lock=90\nmove_jump=32\nmove_fly=86\nmove_reset_cam=67\n[video]\nrender_distance=100"
+# func generate_binding_config():
+# 	print("Generating default config for '" + settings_config_file_path + "'.")
+# 	var file = File.new()
+# 	file.open(settings_config_file_path, File.WRITE)
+# 	file.store_string(bindings_template)
+# 	file.close()
+# 	print("Writing template.")

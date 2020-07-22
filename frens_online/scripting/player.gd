@@ -67,6 +67,8 @@ onready var p_cam_r = $player_collide/cam_rotate/head/cam_zoom/cam_move/cam_phys
 onready var throw_point = $player_collide/throw_point
 onready var p_close_cam_area = $player_collide/cam_rotate/head/cam_zoom/p_close_cam_area
 onready var fp_cam = $player_collide/cam_rotate/head/fp_cam
+onready var selected_box = $hud/h_p_info_background_selected
+onready var selected_box_name = $hud/h_p_info_background_selected/l_target_name
 export onready var default_model = load("res://assets/models/hors.tscn")
 
 var render_dist
@@ -148,9 +150,14 @@ func is_mouse_overlapping_obj(pos):
 #input catching
 func _input(event):
 	if Input.is_action_just_pressed("move_cam_press") && is_mouse_overlapping_obj(event.position):
-		if selected_obj.collider.get_parent().get_ent_type() == enums.ENT_TYPE.PHYS_OBJ:
-			attach_obj(selected_obj.collider)
+		match selected_obj.collider.get_ent_type():
+			enums.ENT_TYPE.PHYS_OBJ:
+				attach_obj(selected_obj.collider)
+			enums.ENT_TYPE.PLAYER_OBJ:
+				on_player_selected(selected_obj.collider)
 		print("Object '" + str(selected_obj.collider) + "' clicked.")
+	elif Input.is_action_just_pressed("move_cam_press") && !is_mouse_overlapping_obj(event.position):
+		player_deselected()
 	else:
 		if Input.is_action_pressed("move_cam_press") || Input.is_action_pressed("move_free_cam_press"):
 			if Input.is_action_pressed("move_cam_press") && !p_cam_manual:
@@ -227,6 +234,17 @@ func _input(event):
 		game.send_player_move(enums.MOVE_TYPE.BACKWARD, false)
 	if Input.is_action_just_released("move_forward"):
 		game.send_player_move(enums.MOVE_TYPE.FORWARD, false)
+
+func on_player_selected(obj):
+	player_selected(obj.puppet_getname())
+
+func player_selected(player_name):
+	selected_box.show()
+	selected_box_name.text = player_name
+
+func player_deselected():
+	selected_box.hide()
+	selected_box_name.text = ""
 
 #attach object to player
 func attach_obj(obj):

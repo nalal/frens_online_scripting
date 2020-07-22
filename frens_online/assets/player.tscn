@@ -179,6 +179,18 @@ margin_right = 125.0
 margin_bottom = 54.0
 color = Color( 0.180392, 0.168627, 0.168627, 1 )
 
+[node name="h_p_info_background_selected" type="ColorRect" parent="hud"]
+visible = false
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -125.0
+margin_bottom = 54.0
+color = Color( 0.180392, 0.168627, 0.168627, 1 )
+
+[node name="l_target_name" type="Label" parent="hud/h_p_info_background_selected"]
+margin_right = 40.0
+margin_bottom = 14.0
+
 [node name="h_p_name_label" type="Label" parent="hud"]
 margin_right = 40.0
 margin_bottom = 14.0

@@ -1,14 +1,14 @@
-extends Spatial
+extends RigidBody
 
 var obj_id
 var is_synced = false
 var can_be_grabbed = true
-onready var placeholder_model = $rb_phys_obj/model
-onready var placeholder_collision = $rb_phys_obj/cs_phys_obj
-onready var phys_obj_node = $rb_phys_obj
+onready var placeholder_model = $model
+onready var placeholder_collision = $cs_phys_obj
+#onready var phys_obj_node = $
 var set_collider
 var asset_path
-var ent_type = enums.ENT_TYPE.PHYS_OBJ
+const ent_type = enums.ENT_TYPE.PHYS_OBJ
 
 #on object load, do this
 func _ready():
@@ -58,7 +58,7 @@ func set_id(id):
 #apply force to object
 #[vel] = linear velocity to apply to object (Vector3)
 func throw(vel):
-	phys_obj_node.apply_impulse(Vector3(0,0,0),vel)
+	apply_impulse(Vector3(0,0,0),vel)
 
 #get object ID
 func get_obj_id():
@@ -70,7 +70,7 @@ func get_is_synced():
 
 #get phys obj global position
 func get_pos():
-	return phys_obj_node.get_global_transform()
+	return get_global_transform()
 
 #get path of entity asset
 func get_asset_path():
@@ -83,7 +83,7 @@ func set_asset_path(path):
 
 #get current lin velocity
 func get_obj_velocity():
-	return phys_obj_node.get_linear_velocity()
+	return get_linear_velocity()
 
 #send phys obj position to server
 func send_data():
@@ -94,13 +94,13 @@ func send_data():
 #turn off collision for obj
 func disable_collision():
 	set_collider.set_disabled(true)
-	phys_obj_node.set_mode(1)
+	set_mode(1)
 
 #load collision data for entity from path
 #[collision_path] = path to collision data entity
 func load_collision(collision_path):
 	placeholder_collision.disabled(true)
-	phys_obj_node.add_child(get_node(collision_path))
+	add_child(get_node(collision_path))
 
 #load model for entity from path
 #[model_path] = path to model entity (string)

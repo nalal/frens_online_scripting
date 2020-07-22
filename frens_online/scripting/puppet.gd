@@ -3,6 +3,8 @@ extends KinematicBody
 #puppet script
 #code here handles local puppet entities
 
+const ent_type = enums.ENT_TYPE.PLAYER_OBJ
+
 #puppet variables
 #puppet name
 var pu_name = "Puppet"
@@ -62,6 +64,9 @@ func _physics_process(delta):
 	p_velocity = move_and_slide(p_velocity)
 	pass
 
+func get_ent_type():
+	return ent_type
+
 #set puppet node name from ID, why set_name? becuase I'm lazy and copied the code from set name in player
 #[set_name] = name to set node to (string)
 func set_puppet_id(set_name):
@@ -72,6 +77,9 @@ func set_puppet_id(set_name):
 func puppet_setname(name_in):
 	pu_name = name_in
 	pu_name_render.set_puppet_name(pu_name)
+
+func puppet_getname():
+	return pu_name
 
 #throw object call
 #[obj] = object to throw (node)
